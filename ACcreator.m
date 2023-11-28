@@ -1,6 +1,8 @@
-function  AC = ACcreatorLoads(X)
+function  AC = ACcreator(X, Wf, Wwing, Loads)
+
+
 %input the design vector 
-%output the AC data structure as required by Q3D for Loads
+%output the AC data structure as required by Q3D for AERO
 
 %constants From the subsonic design book ? check the numbers TODO
 dihedral = 4.561896822; 
@@ -8,8 +10,9 @@ s0 = 5.75;
 twist1 = 3.8;
 twist2 = 0.6;
 twist3 = -0.5;
-Mach = 0.82; % FOR LOADS ONLY NOT AERO
-nmax = 2.5;  % FOR LOADS ONLY NOT AERO
+
+%Constants to change when making consistent in reference run
+Waw = 42220 * 9.81 % TODO estimate this nummber better
 
 %renaming design vector to variables for readabillity
 b = X(1); % wing span
@@ -18,8 +21,18 @@ taper = X(3); % taperratio
 sweep = X(4); % LE sweep !
 kt = X(5:11); % top surface coefficients
 kb = X(11:17); % bottom surface coefficients
+altitude = X(end); % flight altitude (m)
 
-AC.Aero.alt  = X(end); % flight altitude (m)
+%Depending on dicipline variables
+if Loads == 1
+    nmax = 2.5;
+    Mach = 0.82;
+    W = Wf + Wwing + Waw; % WTO_max
+else
+    nmax = 1;
+    Mach = X(17);
+    W = sqrt((Wf + Wwing + Waw) * ( Waw - Wwing));% Design Weight
+end
 
 
 %calculating required planform parameters
@@ -39,6 +52,8 @@ mac1 = 2/3 * c1 * (1 + taper1 + taper1^2)/(1 + taper1); % mac inboard section
 mac2 = 2/3 * c2 * (1 + taper2 + taper2^2)/(1 + taper2); % mac outboard section
 mac = (mac1 * S1 + mac2 * S2)/(S1 + S2); % total wing mac
 
+Wdes = 
+
 
 %Building the data structure
 AC.Aero.M = Mach;  % flight Mach number for loads NOT FOR AERO!!
@@ -51,16 +66,17 @@ AC.Wing.Airfoils    = [kt,kb;
                        kt,kb];
 AC.Wing.inc  = 0;              % Wing incidence angle (degree)
 AC.Wing.eta = [0;1];           % Spanwise location of the airfoil sections
-AC.Visc  = 0;                  % 0 for inviscid and 1 for viscous analysis
+AC.Visc  = 1;                  % 0 for inviscid and 1 for viscous analysis
 AC.Aero.MaxIterIndex = 150;    %Maximum number of Iteration for the
                                %convergence of viscous calculatio TODO
                                %inviscid so is this required?
 
 % Flight Condition
+AC.Aero.alt  = altitude
 [~,a, ~, rho, nu] = atmosisa(AC.Aero.alt); % standard atmosphere calcs
 AC.Aero.V     = AC.Aero.M * a;            % flight speed (m/s)
 AC.Aero.rho   = rho;                      % air density  (kg/m3)
 AC.Aero.Re    = AC.Aero.V  * mac / nu ;   % reynolds number (based on mac)
-AC.Aero.CL    = nmax *  2 * WTOmax / rho / AC.Aero.V^2 / S; % CL
+AC.Aero.CL    = nmax *  2 * W / rho / AC.Aero.V^2 / S; % CL
 
 end
