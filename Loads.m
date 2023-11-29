@@ -1,4 +1,4 @@
-function [L, M_c4] = Loads(x, constant)
+function [L, M_c4] = Loads(x, constant, target)
 
 %% Loads
 filename = 'A320';      % Filename for .INIT, .LOAD and .weight file file
@@ -8,8 +8,8 @@ M = constant.M_mo;      % Mach number [-]
 h = x(18);              % Altitude [m]
 
 % Properties
-WTOmax = 73500;         % Maximum take-off weight [kg]
-ZFW = 60500;            % Zero-fuel weight [kg]
+W_TO_max = 73500;         % Maximum take-off weight [kg]
+ZFW = 3.1485e+04+target.W_wing+constant.payload_max;    % Zero-fuel weight [kg]
 b = x(1);
 c1 = x(2);
 taper = x(3);
@@ -77,7 +77,7 @@ AC.Aero.Re    = AC.Aero.V  * mac / nu;      % reynolds number (bqased on mean ae
 
 %For loads CL = 
 nmax = 2.5;
-AC.Aero.CL    = nmax *  2 * WTOmax * 9.81 / rho / AC.Aero.V^2 / S;   % lift coefficient - comment this line to run the code for given alpha%
+AC.Aero.CL    = nmax *  2 * W_TO_max * 9.81 / rho / AC.Aero.V^2 / S;   % lift coefficient - comment this line to run the code for given alpha%
 %AC.Aero.Alpha = 2;             % angle of attack -  comment this line to run the code for given cl 
 
 
@@ -127,6 +127,6 @@ for i=1:length(Yst)
 end
 
 %% Write .INIT file
-initFileWriter(WTOmax, ZFW, S, b, airfoil, c1, c2, c3, AC.Wing.Geom(1,1), AC.Wing.Geom(2,1), AC.Wing.Geom(3,1), AC.Wing.Geom(1,2), AC.Wing.Geom(2,2), AC.Wing.Geom(3,2), AC.Wing.Geom(1,3), AC.Wing.Geom(2,3), AC.Wing.Geom(3,3), front_spar, rear_spar, filename)
+initFileWriter(W_TO_max, ZFW, S, b, airfoil, c1, c2, c3, AC.Wing.Geom(1,1), AC.Wing.Geom(2,1), AC.Wing.Geom(3,1), AC.Wing.Geom(1,2), AC.Wing.Geom(2,2), AC.Wing.Geom(3,2), AC.Wing.Geom(1,3), AC.Wing.Geom(2,3), AC.Wing.Geom(3,3), front_spar, rear_spar, filename)
 
 end
