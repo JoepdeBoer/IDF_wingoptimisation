@@ -93,7 +93,7 @@ AC.Aero.CL    = nmax *  2 * WTOmax * 9.81 / rho / AC.Aero.V^2 / S;   % lift coef
 %% Solver
 tic
 
-Res = Q3D_solver(AC);
+Res = Q3D_solver(AC)
 
 toc
 %% Write .LOAD file
