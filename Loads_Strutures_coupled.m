@@ -6,89 +6,35 @@ clc
 filename = 'A320';      % Filename for .INIT, .LOAD and .weight file file
 
 %Design weight
-WTOmax = 73500;         % Maximum take-off weight [kg]
-ZFW = 60500;            % Zero-fuel weight [kg]
+MTOmax = 73500;         % Maximum take-off mass [kg]
+ZFM = 60500;            % Zero-fuel mass [kg]
+
+WTOmax = MTOmax * 9.81;
+ZFW = ZFM * 9.81;
+
 % Flight conditions
-M = 0.82;
-h = 11.280;
-% Wfuel = 
-% Wdes = sqrt(WTomax * (WTOmax -Wfuel))
+Mcr = 0.78; % cruise mach not the mach for load calculation that is done in accreator
+hcr = 11.280;
+Waw = WTOmax * 0.7; % TODO make better guess
+Wf = WTOmax - Waw - 0.1 * WTOmax ; %TODO make better guess for fuel weight
+Wwing = WTOmax - Wf - Waw; % TODO make better guess for wing weight 
+
 
 %inputs planform
 c1 = 6.1;
 taper = 0.268852459;
 b = 34.09;
 sweep = 24.506;
-dihedral = 4.561896822;
-s0 = 5.75;
-twist1 = 3.8;
-twist2 = 0.6;
-twist3 = -0.5;
 front_spar = 0.2;
 rear_spar = 0.6;
 
-%inputs airfoil
-kt = [0.192392936732350 0.0653141645170239 0.221217406157354 0.0724162633146400 0.229988611159206 0.313396932618784];
-kb = [-0.185506217628836 -0.134457419499340 -0.0387763254380645 -0.392501124442199 0.0603430027877033 0.267973110203190];
-airfoil = 'b737a';          % Airfoil coordinate filename w/o file extension
+X = [b, c1, taper, sweep, 0.192392936732350, 0.0653141645170239,...
+    0.221217406157354, 0.0724162633146400, 0.229988611159206,...
+    0.313396932618784, -0.185506217628836, -0.134457419499340,...
+    -0.0387763254380645, -0.392501124442199, 0.0603430027877033,...
+    0.267973110203190, Mcr, hcr] % Design vector
 
-% Wing incidence angle (degree)
-AC.Wing.inc  = 0;   
-
-%calculating required planform parameters
-x2 = s0 * tand(sweep);
-z2 = s0 * tand(dihedral);
-c2 = c1 - x2;
-twist2 = 0;
-
-x3 = b/2 * tand(sweep);
-z3 = b/2 * tand(dihedral);
-c3 = c1 * taper;
-twist3 = -2;
-
-taper1 = c2/c1;
-taper2 = c3/c2;
-
-S1 = (c1 +c2)/2 * s0;
-S2 = (c2+c3)/2 * (b/2 -s0);
-S = (S1 + S2) * 2;
-mac1 = 2/3 * c1 * (1 + taper1 + taper1^2)/(1 + taper1); 
-mac2 = 2/3 * c2 * (1 + taper2 + taper2^2)/(1 + taper2); 
-mac = (mac1 * S1 + mac2 * S2)/(S1 + S2);
-
-
-
-% Wing planform geometry 
-%                x    y     z   chord(m)    twist angle (deg) 
-AC.Wing.Geom = [0     0     0     c1   twist1;
-                  x2   s0   z2    c2   twist2;
-                  x3   b/2  z3    c3   twist3];
-
-AC.Wing.Airfoils    = [kt,kb;
-                       kt,kb];
-                  
-AC.Wing.eta = [0;1];  % Spanwise location of the airfoil sections
-
-% Viscous vs inviscid
-AC.Visc  = 0;              % 0 for inviscid and 1 for viscous analysis
-AC.Aero.MaxIterIndex = 150;    %Maximum number of Iteration for the
-                                %convergence of viscous calculation
-                                
-                                
-% Flight Condition
-AC.Aero.alt   = h;                          % flight altitude (m)
-AC.Aero.M     = M;                          % flight Mach number 
-[T, a, P, rho] = atmosisa(AC.Aero.alt);  % Determine atmospheric properties at given height
-nu = 1.45e-5;                               % Kinematic viscosity [N s/m^2]
-AC.Aero.V     = AC.Aero.M * a;              % flight speed (m/s)
-AC.Aero.rho   = rho;                        % air density  (kg/m3)
-AC.Aero.Re    = AC.Aero.V  * mac / nu;      % reynolds number (bqased on mean aerodynamic chord)
-
-%For loads CL = 
-nmax = 2.5;
-AC.Aero.CL    = nmax *  2 * WTOmax * 9.81 / rho / AC.Aero.V^2 / S;   % lift coefficient - comment this line to run the code for given alpha%
-%AC.Aero.Alpha = 2;             % angle of attack -  comment this line to run the code for given cl 
-
+AC = ACcreator(X,Wf,Wwing,1) % creates the AC structure for the loads calculation
 
 %% Solver
 tic
@@ -136,7 +82,7 @@ for i=1:length(Yst)
 end
 
 %% Write .INIT file
-initFileWriter(WTOmax, ZFW, S, b, airfoil, c1, c2, c3, AC.Wing.Geom(1,1), AC.Wing.Geom(2,1), AC.Wing.Geom(3,1), AC.Wing.Geom(1,2), AC.Wing.Geom(2,2), AC.Wing.Geom(3,2), AC.Wing.Geom(1,3), AC.Wing.Geom(2,3), AC.Wing.Geom(3,3), front_spar, rear_spar, filename)
+initFileWriter(MTOmax, MFW, S, b, airfoil, c1, c2, c3, AC.Wing.Geom(1,1), AC.Wing.Geom(2,1), AC.Wing.Geom(3,1), AC.Wing.Geom(1,2), AC.Wing.Geom(2,2), AC.Wing.Geom(3,2), AC.Wing.Geom(1,3), AC.Wing.Geom(2,3), AC.Wing.Geom(3,3), front_spar, rear_spar, filename)
 
 %% Run Emwet
 EMWET A320
