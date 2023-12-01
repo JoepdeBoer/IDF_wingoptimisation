@@ -44,8 +44,11 @@ constant.payload = 14250;       % Design payload [kg]
 constant.payload_max = 19190;   % Maximum payload [kg]
 constant.R = 5000e3;            % Mission range [m]
 
+%% Inital values
+init.W_TO_max = 73500;
+
 %% Target variables
-target.LD = 16;
+target.LD = 18.76;
 target.W_fuel = 17940;
 target.W_wing = 9825;
 
@@ -55,5 +58,6 @@ OEW = 3.1485e+04+target.W_wing;     % Operational empty weight [kg]
 %% Initial run
 [L, M_c4] = Loads(x0.*ref, constant, target);
 W_wing = Structures
-constant.W_aw = OEW+constant.payload-W_wing
+% constant.W_aw = OEW+constant.payload-W_wing
+constant.W_aw = init.W_TO_max - W_wing - target.W_fuel
 W_fuel = Performance(x0.*ref, constant, ref, target)
