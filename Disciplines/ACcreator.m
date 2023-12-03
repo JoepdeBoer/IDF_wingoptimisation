@@ -1,7 +1,7 @@
-function  AC = ACcreator(X, Wf, Wwing, Loads)
+function  AC = ACcreator(X, Loads)
 
 
-%input the design vector 
+%input the design vector NON NORMALISED!
 %output the AC data structure as required by Q3D for AERO
 
 %constants From the subsonic design book ? check the numbers TODO
@@ -21,18 +21,18 @@ taper = X(3); % taperratio
 sweep = X(4); % LE sweep !
 kt = X(5:11); % top surface coefficients
 kb = X(11:17); % bottom surface coefficients
-altitude = X(end); % flight altitude (m)
+altitude = X(18); % flight altitude (m)
 
 %Depending on dicipline variables
 if Loads == 1
     nmax = 2.5;
     Mach = 0.82;
-    W = Wf + Wwing + Waw; % WTO_max
+    W = X(20) + X(21) + Waw; % WTO_max
     AC.visc = 0 % inviscid anlysis for loads
 else
     nmax = 1;
     Mach = X(17);
-    W = sqrt((Wf + Wwing + Waw) * ( Waw - Wwing));% Design Weight
+    W = sqrt((X(20) + X(21) + Waw) * ( Waw - X(21)));% Design Weight
     AC.visc = 1 % viscid analysis for aerodynamics
 end
 

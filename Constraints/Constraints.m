@@ -1,9 +1,12 @@
-function [c, cc] = Constraints(x, constant, res)
+function [c, cc] = Constraints(x)
+
+constant = get_constants()
 
 % Define descipline results
-LD = res.LD;
-W_fuel = res.W_fuel;
-W_wing = res.W_wing;
+global couplings;
+LD = couplings.LD;
+W_fuel = couplings.W_fuel;
+W_wing = couplings.W_wing;
 
 % Define required design variables
 b = x(1);
@@ -27,9 +30,9 @@ else
     Lambda_25 = Lambda_out;
 end
 
-cc1 = LD-x(19);
-cc2 = W_fuel-x(20);
-cc3 = W_wing-x(21);
+cc1 = LD-x(19); % 
+cc2 = W_fuel-x(20); % 
+cc3 = W_wing-x(21); %
 cc = [cc1, cc2, cc3];    % Consistency constraints
 
 c1 = W_TO_max/S - init.W_TO_max/init.S_ref;     % c1 >= ...
