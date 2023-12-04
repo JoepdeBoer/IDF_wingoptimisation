@@ -3,7 +3,7 @@ function error = fitairfoil(x)
 
 % Import airfoil coordinates
 filename = 'withcomb135';
-fid = fopen(['C:\Users\luukh\Documents\Studie\Q1\MDO for Aerospace Applications (AE4205)\2023\Tutorial\Exercises\Tutorial 2\Assignment tutorial 2\airfoils\', filename, '.dat']);
+fid = fopen([filename, '.dat']);
 coor = fscanf(fid, '%f\t%f', [2, inf]);
 fclose(fid);
 
@@ -35,11 +35,3 @@ err_up = Xtu(:,2)-coor(2,1:pos_index)';
 err_low = Xtl_low(:,2)-coor(2,pos_index+1:end)';
 
 error = sum(err_up.^2)+sum(err_low.^2);
-
-% val = zeros(1,length(error));
-% val(1) = error(1);
-% for i=2:length(error)
-%     val(i) = val(i-1)*error(i);
-% end
-% 
-% fopt = val(end);

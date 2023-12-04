@@ -1,18 +1,20 @@
-function  AC = ACcreator(X, Loads)
+function  AC = ACcreator(X, aero_loads)
+% Inputs: 
+% - X: design vector NON NORMALISED!
+% - aero_loads: '0' Aerodynamics / '1' Loads
+% Output the AC data structure as required by Q3D for AERO
 
-
-%input the design vector NON NORMALISED!
-%output the AC data structure as required by Q3D for AERO
+constant = get_constants();
 
 %constants From the subsonic design book ? check the numbers TODO
-dihedral = 4.561896822; 
-s0 = 5.75;
-twist1 = 3.8;
-twist2 = 0.6;
-twist3 = -0.5;
+dihedral = constant.dihedral; 
+s0 = constant.s0;
+twist1 = constant.twist_r;
+twist2 = constant.twist_k;
+twist3 = constant.twist_t;
 
 %Constants to change when making consistent in reference run
-Waw = 42220 * 9.81; % TODO estimate this nummber better
+W_aw = constant.W_aw * 9.81; % TODO estimate this nummber better
 
 %renaming design vector to variables for readabillity
 b = X(1); % wing span
@@ -24,16 +26,16 @@ kb = X(11:17); % bottom surface coefficients
 altitude = X(18); % flight altitude (m)
 
 %Depending on dicipline variables
-if Loads == 1
+if aero_loads == 1
     nmax = 2.5;
-    Mach = 0.82;
-    W = X(20) + X(21) + Waw; % WTO_max
-    AC.visc = 0 % inviscid anlysis for loads
+    Mach = constant.M_mo;
+    W = X(20) + X(21) + W_aw; % WTO_max
+    AC.visc = 0; % inviscid anlysis for loads
 else
     nmax = 1;
     Mach = X(17);
-    W = sqrt((X(20) + X(21) + Waw) * ( Waw - X(21)));% Design Weight
-    AC.visc = 1 % viscid analysis for aerodynamics
+    W = sqrt((X(20) + X(21) + W_aw) * ( W_aw - X(21)));% Design Weight
+    AC.visc = 1; % viscid analysis for aerodynamics
 end
 
 
@@ -72,11 +74,18 @@ AC.Aero.MaxIterIndex = 150;    %Maximum number of Iteration for the
                                %inviscid so is this required?
 
 % Flight Condition
-AC.Aero.alt  = altitude
-[~,a, ~, rho, nu] = atmosisa(AC.Aero.alt); % standard atmosphere calcs
-AC.Aero.V     = AC.Aero.M * a;            % flight speed (m/s)
-AC.Aero.rho   = rho;                      % air density  (kg/m3)
-AC.Aero.Re    = AC.Aero.V  * mac / nu ;   % reynolds number (based on mac)
+AC.Aero.alt  = altitude;
+
+% Use for newer MATLAB version
+% [~,a, ~, rho, nu] = atmosisa(AC.Aero.alt); % standard atmosphere calcs
+
+% Use for old MATLAB version
+[~,a, ~, rho] = atmosisa(AC.Aero.alt);      % standard atmosphere calcs
+nu = 1.45e-5;                               % Kinematic viscosity [N s/m^2]
+
+AC.Aero.V     = AC.Aero.M * a;              % flight speed (m/s)
+AC.Aero.rho   = rho;                        % air density  (kg/m3)
+AC.Aero.Re    = AC.Aero.V  * mac / nu ;     % reynolds number (based on mac)
 AC.Aero.CL    = nmax *  2 * W / rho / AC.Aero.V^2 / S; % CL
 
 end

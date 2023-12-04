@@ -1,4 +1,4 @@
-function [L, M_c4] = Loads(x, constant, target)
+function [L, M_c4] = Loads(x, constant)
 
 %% Loads
 filename = 'A320';      % Filename for .INIT, .LOAD and .weight file file
@@ -8,8 +8,8 @@ M = constant.M_mo;      % Mach number [-]
 h = x(18);              % Altitude [m]
 
 % Properties
-W_TO_max = 73500;         % Maximum take-off weight [kg]
-ZFW = 3.1485e+04+target.W_wing+constant.payload_max;    % Zero-fuel weight [kg]
+W_TO_max = 73500;       % Maximum take-off weight [kg]
+ZFW = 3.1485e+04+x(21)+constant.payload_max;    % Zero-fuel weight [kg]
 b = x(1);
 c1 = x(2);
 taper = x(3);
