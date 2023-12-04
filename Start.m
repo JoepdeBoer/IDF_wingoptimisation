@@ -63,9 +63,6 @@ ub(18) = 1.1;
 %% Constants
 constant = get_constants();
 
-%% Inital values
-init.W_TO_max = 73500;
-
 %% Other variables
 OEW = 3.1485e+04+target.W_wing;     % Operational empty weight [kg]
 
@@ -73,7 +70,7 @@ OEW = 3.1485e+04+target.W_wing;     % Operational empty weight [kg]
 global couplings
 [L, M_c4] = Loads(x0.*ref, constant);
 couplings.W_wing = Structures;
-constant.W_aw = init.W_TO_max - W_wing - W_fuel;
+constant.W_aw = constant.W_TO_max_ref - W_wing - W_fuel;
 couplings.W_fuel = Performance(x0.*ref, constant, ref);
 couplings.LD = 18.76;
 [c, cc] = Constraints(x0.*ref);
