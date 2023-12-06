@@ -1,4 +1,4 @@
-function [Au, Al] = AirfoilFit(airfoil)
+function [Au, Al, Xtu, Xtl] = AirfoilFit(airfoil)
 
 %% Perform optimization
 x0 = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5];
@@ -35,8 +35,8 @@ for i=2:length(coor)
     end
 end
 
-X_up = coor(1,1:pos_index)';      %points for evaluation along x-axis
-X_low = coor(1,pos_index+1:end)';      %points for evaluation along x-axis
+X_up = coor(1,1:pos_index)';            %points for evaluation along x-axis
+X_low = coor(1,pos_index+1:end)';       %points for evaluation along x-axis
 
 [Xtu,Xtl,C] = D_airfoil2(Au,Al,X_up);
 [Xtu_low,Xtl_low,C_low] = D_airfoil2(Au,Al,X_low);

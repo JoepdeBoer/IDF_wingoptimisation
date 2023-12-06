@@ -64,7 +64,7 @@ ub(18) = 1.1;
 constant = get_constants();
 
 %% Other variables
-OEW = 3.1485e+04+target.W_wing;     % Operational empty weight [kg]
+OEW = 3.1485e+04+x0(21)*ref(21);     % Operational empty weight [kg]
 
 %% Initial run
 global couplings

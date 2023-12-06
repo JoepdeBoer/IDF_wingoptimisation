@@ -36,7 +36,7 @@ else
 end
 
 % Fuel tank volume
-V_tank = TankVolume(x);
+V_tank = TankVolume(x, constant);
 
 cc1 = x(19)-LD; % 
 cc2 = x(20)-W_fuel; % 
