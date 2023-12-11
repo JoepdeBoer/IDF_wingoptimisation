@@ -19,9 +19,11 @@ b = X(1); % wing span
 c1 = X(2); % root chord
 taper = X(3); % taperratio
 sweep = X(4); % LE sweep !
-kt = X(5:11); % top surface coefficients
-kb = X(11:17); % bottom surface coefficients
+kt = X(5:10); % top surface coefficients
+kb = X(11:16); % bottom surface coefficients
 altitude = X(18); % flight altitude (m)
+
+sweep_TE = 0.1;     % Inboard trailing edge sweep [deg]
 
 %Depending on dicipline variables
 if aero_loads == 1
@@ -40,7 +42,7 @@ end
 %calculating required planform parameters
 x2 = s0 * tand(sweep); % x loc of kink LE
 z2 = s0 * tand(dihedral); % z loc of kink LE 
-c2 = c1 - x2; % chord lenght at kink
+c2 = c1 - x2 + s0*tand(sweep_TE); % chord lenght at kink
 x3 = b/2 * tand(sweep); % x loc of tip LE
 z3 = b/2 * tand(dihedral); % z loc of tip LE
 c3 = c1 * taper; % chord lenght of tip

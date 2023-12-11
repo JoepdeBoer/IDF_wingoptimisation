@@ -5,7 +5,7 @@ x0 = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5];
 lb = [-0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -1, -1, -1, -1, -1, -1];
 ub = [1, 1, 1, 1, 1, 1, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5];
 
-options = optimset('Display','iter','Algorithm','sqp');
+options = optimset('Display','off','Algorithm','sqp');
 
 tic;
 [x, fval, exitflag, output] = fmincon(@fitairfoil, x0, [], [], [], [], lb, ub, [], options);

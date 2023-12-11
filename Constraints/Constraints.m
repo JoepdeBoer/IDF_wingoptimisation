@@ -1,4 +1,4 @@
-function [c, cc] = Constraints(x)
+function [c, cc] = Constraints(x, ref)
 
 constant = get_constants();
 
@@ -38,12 +38,12 @@ end
 % Fuel tank volume
 V_tank = TankVolume(x, constant);
 
-cc1 = x(19)-LD; % 
-cc2 = x(20)-W_fuel; % 
-cc3 = x(21)-W_wing; %
+cc1 = x(19)/ref(19)-LD/ref(19);
+cc2 = x(20)/ref(20)-W_fuel/ref(20);
+cc3 = x(21)/ref(21)-W_wing/ref(21);
 cc = [cc1, cc2, cc3];    % Consistency constraints
 
-c1 = W_TO_max/S - constant.W_TO_max_ref/constant.S_ref;     % c1 >= ...
-c2 = W_fuel/constant.rho_fuel-V_tank*constant.f_tank;       % c2 >= ...
-c3 = C_L_cr-(0.86*cosd(Lambda_25))/1.3;                     % c3 >= ...
-c = [c1, c2, c3];                                   % Inequality constraints
+c1 = (W_TO_max/S)/(constant.W_TO_max_ref/constant.S_ref) - 1;       % c1 >= ...
+c2 = (W_fuel/constant.rho_fuel-V_tank*constant.f_tank)/(constant.W_fuel_ref/constant.rho_fuel-constant.V_tank_ref*constant.f_tank);     % c2 >= ...
+c3 = (C_L_cr-(0.86*cosd(Lambda_25))/1.3)/(constant.C_L_cr_ref-(0.86*cosd(constant.Lambda_25_ref))/1.3);     % c3 >= ...
+c = [c1, c2, c3];   % Inequality constraints
