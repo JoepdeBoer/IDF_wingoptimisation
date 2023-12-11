@@ -2,6 +2,7 @@ function constant = get_constants()
 constant.s0 = 5.75;             % Kink semi-span [m]
 constant.W_aw = 4.5735e4;       % Weight aircraft-wing [kg]
 constant.W_TO_max_ref = 73500;  % Maximum take-off weight reference [kg]
+constant.W_fuel_ref = 17940;    % Fuel weight reference [kg]
 constant.M_mo = 0.82;           % Maximum operating mach number [-]
 constant.dihedral = 4.562;      % Dihedral angle [deg]
 constant.twist_r = 3.8;         % Root twist [deg]
@@ -16,4 +17,5 @@ constant.R = 5000e3;            % Mission range [m]
 constant.S_ref = 112.9059;      % Reference planform area [m^2]
 constant.rho_fuel = 0.81715e3;  % Density fuel [kg/m^3]
 constant.f_tank = 0.93;         % Fuel tank fraction [-]
+constant.V_tank_ref = 9.4280;   % Fuel tank volume reference [m^3]
 end

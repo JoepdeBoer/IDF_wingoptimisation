@@ -1,3 +1,5 @@
+addpath(genpath('Constraints')); addpath(genpath('Disciplines'));
+
 %% Inputs
 airfoil = 'withcomb135';        % Specify name of initial airfoil coordinate .dat file
 
@@ -26,7 +28,6 @@ ref(18) = h_cr;
 ref(19) = LD;
 ref(20) = W_fuel;
 ref(21) = W_wing;
-
 % Create design vector (normalised)
 x0(1) = b/ref(1);
 x0(2) = c_r/ref(2);
@@ -68,12 +69,25 @@ OEW = 3.1485e+04+x0(21)*ref(21);     % Operational empty weight [kg]
 
 %% Initial run
 global couplings
-[L, M_c4] = Loads(x0.*ref, constant);
+couplings.LD = 18.76;
+LD = Aerodynamics(x0.*ref);
+
+[L, M_c4, AC] = Loads(x0.*ref);
 couplings.W_wing = Structures;
 constant.W_aw = constant.W_TO_max_ref - W_wing - W_fuel;
 couplings.W_fuel = Performance(x0.*ref, constant, ref);
-couplings.LD = 18.76;
-[c, cc] = Constraints(x0.*ref);
+[c, cc] = Constraints(x0.*ref, ref);
+V_tank = TankVolume(x0.*ref, constant);
+
+%% Wing planform plot
+figure
+plot([AC.Wing.Geom(1,1), AC.Wing.Geom(2,1), AC.Wing.Geom(3,1), AC.Wing.Geom(3,1)+AC.Wing.Geom(3,4)], [AC.Wing.Geom(1,2), AC.Wing.Geom(2,2), AC.Wing.Geom(3,2), AC.Wing.Geom(3,2)], 'k', 'linewidth', 1); hold on
+plot([AC.Wing.Geom(1,1)+AC.Wing.Geom(1,4), AC.Wing.Geom(2,1)+AC.Wing.Geom(2,4), AC.Wing.Geom(3,1)+AC.Wing.Geom(3,4)], [AC.Wing.Geom(1,2), AC.Wing.Geom(2,2), AC.Wing.Geom(3,2)], 'k', 'linewidth', 1); hold on
+title('Wing planform')
+xlabel('x [m]')
+ylabel('y [m]')
+axis([-5, 15, 0, 20])
+pbaspect([1 1 1])
 
 %% Optimisation
 % Options for optimization

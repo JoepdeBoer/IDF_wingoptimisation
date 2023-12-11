@@ -1,7 +1,5 @@
 function V_tank = TankVolume(x, constant)
 
-% V_tank = 15e3;
-
 % Properties
 b = x(1);               % Wing span [m]
 c_r = x(2);             % Root chord length [m]
@@ -16,7 +14,7 @@ refinement = 1000;
 chord = [c_r, c_k, c_t];
 chord = array_interpolation(chord, refinement);
 y = [0, constant.s0, b/2];
-y = array_interpolation(y, refinement)
+y = array_interpolation(y, refinement);
 
 [Au, Al, Xtu, Xtl] = AirfoilFit(constant.airfoil);
 

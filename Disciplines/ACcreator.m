@@ -21,28 +21,30 @@ b = X(1); % wing span
 c1 = X(2); % root chord
 taper = X(3); % taperratio
 sweep = X(4); % LE sweep !
-kt = X(5:11); % top surface coefficients
-kb = X(11:17); % bottom surface coefficients
+kt = X(5:10); % top surface coefficients
+kb = X(11:16); % bottom surface coefficients
 altitude = X(18); % flight altitude (m)
+
+sweep_TE = 0.1;     % Inboard trailing edge sweep [deg]
 
 %Depending on dicipline variables
 if aero_loads == 1
     nmax = 2.5;
     Mach = constant.M_mo;
     W = X(20) + X(21) + W_aw; % WTO_max
-    AC.visc = 0; % inviscid anlysis for loads
+    AC.Visc = 0; % inviscid anlysis for loads
 else
     nmax = 1;
     Mach = X(17);
     W = sqrt((X(20) + X(21) + W_aw) * ( W_aw - X(21)));% Design Weight
-    AC.visc = 1; % viscid analysis for aerodynamics
+    AC.Visc = 1; % viscid analysis for aerodynamics
 end
 
 
 %calculating required planform parameters
 x2 = s0 * tand(sweep); % x loc of kink LE
 z2 = s0 * tand(dihedral); % z loc of kink LE 
-c2 = c1 - x2; % chord lenght at kink
+c2 = c1 - x2 + s0*tand(sweep_TE); % chord lenght at kink
 x3 = b/2 * tand(sweep); % x loc of tip LE
 z3 = b/2 * tand(dihedral); % z loc of tip LE
 c3 = c1 * taper; % chord lenght of tip
@@ -55,7 +57,6 @@ S = (S1 + S2) * 2; % full wing surface area
 mac1 = 2/3 * c1 * (1 + taper1 + taper1^2)/(1 + taper1); % mac inboard section
 mac2 = 2/3 * c2 * (1 + taper2 + taper2^2)/(1 + taper2); % mac outboard section
 mac = (mac1 * S1 + mac2 * S2)/(S1 + S2); % total wing mac
-
 
 
 %Building the data structure
