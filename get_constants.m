@@ -18,4 +18,10 @@ constant.S_ref = 112.9059;      % Reference planform area [m^2]
 constant.rho_fuel = 0.81715e3;  % Density fuel [kg/m^3]
 constant.f_tank = 0.93;         % Fuel tank fraction [-]
 constant.V_tank_ref = 9.4280;   % Fuel tank volume reference [m^3]
+
+% TODO NOT ACTUAL NUMBERS
+constant.C_L_cr_ref = 0.1;      % TODO 
+constant.Lambda_25_ref = 15;    % TODO
+
+
 end
