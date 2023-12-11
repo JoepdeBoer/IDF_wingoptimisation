@@ -27,15 +27,19 @@ function [CO2] = IDF_optimiser(X)
 
     % Denormalising 
     Design = X.*ref; % element whise multiplication
+    disp(Design);
     % Initial guesses of discipline outputs
     LD_guess = X(19);
     W_fuel_guess = X(20);
     W_wing_guess = X(21);
 
+    % getting constants
+    constant = get_constants();
+
     % Discilplines
     global couplings;
     couplings.LD = Aerodynamics(Design);
-    couplings.W_fuel = Performance(Design, constant, reference);
+    couplings.W_fuel = Performance(Design, constant, ref);
     Loads(Design, constant);
     couplings.W_wing = Structures();
 

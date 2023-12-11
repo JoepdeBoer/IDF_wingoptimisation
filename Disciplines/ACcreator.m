@@ -12,9 +12,7 @@ s0 = constant.s0;
 twist1 = constant.twist_r;
 twist2 = constant.twist_k;
 twist3 = constant.twist_t;
-
-%Constants to change when making consistent in reference run
-W_aw = constant.W_aw * 9.81; % TODO estimate this nummber better
+W_aw = constant.W_aw; % kg to N
 
 %renaming design vector to variables for readabillity
 b = X(1); % wing span
@@ -29,13 +27,13 @@ altitude = X(18); % flight altitude (m)
 if aero_loads == 1
     nmax = 2.5;
     Mach = constant.M_mo;
-    W = X(20) + X(21) + W_aw; % WTO_max
-    AC.visc = 0; % inviscid anlysis for loads
+    W = (X(20) + X(21) + W_aw) * 9.81; % WTO_max in Newton
+    AC.Visc = 0; % inviscid anlysis for loads
 else
     nmax = 1;
     Mach = X(17);
-    W = sqrt((X(20) + X(21) + W_aw) * ( W_aw - X(21)));% Design Weight
-    AC.visc = 1; % viscid analysis for aerodynamics
+    W = sqrt(((X(20) + X(21) + W_aw) * 9.81) * ((W_aw - X(21)) * 9.81));% Design Weight in Newton
+    AC.Visc = 1; % viscid analysis for aerodynamics
 end
 
 
@@ -66,9 +64,10 @@ AC.Wing.Geom = [0     0     0     c1   twist1;
                   x3   b/2  z3    c3   twist3];
 
 AC.Wing.Airfoils    = [kt,kb;
+                       kt,kb;
                        kt,kb];
 AC.Wing.inc  = 0;              % Wing incidence angle (degree)
-AC.Wing.eta = [0;1];           % Spanwise location of the airfoil sections
+AC.Wing.eta = [0; 0.5 ; 1];           % Spanwise location of the airfoil sections
 AC.Aero.MaxIterIndex = 150;    %Maximum number of Iteration for the
                                %convergence of viscous calculatio TODO
                                %inviscid so is this required?
