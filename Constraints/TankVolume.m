@@ -36,7 +36,7 @@ for c=chord
     end
 end
 
-V_tank = sum(dV);
+V_tank = 2*sum(dV);             % Total wing fuel tank volume [m^3]
 
 y = y(1:i-1);
 chord = chord(1:i-1);

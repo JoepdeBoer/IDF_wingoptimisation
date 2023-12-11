@@ -13,7 +13,7 @@ M_cr = 0.78;            % Cruise mach number [-]
 h_cr = 11278;           % Cruise altitude [m]
 LD = 18.76;             % Target variable lift/drag ratio [-]
 W_fuel = 17940;         % Target variable W_fuel [kg]
-W_wing = 9825;          % Target variable W_wing [kg]
+W_wing = 6445.3836;     % Target variable W_wing [kg]
 
 % Store reference values
 ref(1) = b;
@@ -69,8 +69,7 @@ OEW = 3.1485e+04+x0(21)*ref(21);     % Operational empty weight [kg]
 
 %% Initial run
 global couplings
-couplings.LD = 18.76;
-LD = Aerodynamics(x0.*ref);
+[couplings.LD, C_D_aw] = Aerodynamics(x0.*ref);
 
 [L, M_c4, AC] = Loads(x0.*ref);
 couplings.W_wing = Structures;
