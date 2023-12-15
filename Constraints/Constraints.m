@@ -1,6 +1,9 @@
-function [c, cc] = Constraints(x, ref)
+function [c, cc] = Constraints(x)
 
+%load('constant.mat');
+%load('ref.mat');
 constant = get_constants();
+ref = get_ref();
 
 % Define descipline results
 global couplings;
@@ -8,7 +11,7 @@ LD = couplings.LD;
 W_fuel = couplings.W_fuel;
 W_wing = couplings.W_wing;
 
-% Define required design variables
+% Define required design variables s0
 b = x(1);
 c_r = x(2);
 lambda = x(3);

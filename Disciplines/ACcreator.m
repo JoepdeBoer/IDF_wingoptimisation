@@ -12,9 +12,7 @@ s0 = constant.s0;
 twist1 = constant.twist_r;
 twist2 = constant.twist_k;
 twist3 = constant.twist_t;
-
-%Constants to change when making consistent in reference run
-W_aw = constant.W_aw * 9.81; % TODO estimate this nummber better
+W_aw = constant.W_aw; % kg to N
 
 %renaming design vector to variables for readabillity
 b = X(1); % wing span
@@ -31,12 +29,12 @@ sweep_TE = 0.1;     % Inboard trailing edge sweep [deg]
 if aero_loads == 1
     nmax = 2.5;
     Mach = constant.M_mo;
-    W = X(20) + X(21) + W_aw; % WTO_max
+    W = (X(20) + X(21) + W_aw) * 9.81; % WTO_max in Newton
     AC.Visc = 0; % inviscid anlysis for loads
 else
     nmax = 1;
     Mach = X(17);
-    W = sqrt((X(20) + X(21) + W_aw) * ( W_aw - X(21)));% Design Weight
+    W = sqrt(((X(20) + X(21) + W_aw) * 9.81) * ((W_aw - X(21)) * 9.81));% Design Weight in Newton
     AC.Visc = 1; % viscid analysis for aerodynamics
 end
 
@@ -59,6 +57,7 @@ mac2 = 2/3 * c2 * (1 + taper2 + taper2^2)/(1 + taper2); % mac outboard section
 mac = (mac1 * S1 + mac2 * S2)/(S1 + S2); % total wing mac
 
 
+
 %Building the data structure
 AC.Aero.M = Mach;  % flight Mach number for loads NOT FOR AERO!!
 %                x    y     z   chord(m)    twist angle (deg) 
@@ -67,9 +66,10 @@ AC.Wing.Geom = [0     0     0     c1   twist1;
                   x3   b/2  z3    c3   twist3];
 
 AC.Wing.Airfoils    = [kt,kb;
+                       kt,kb;
                        kt,kb];
 AC.Wing.inc  = 0;              % Wing incidence angle (degree)
-AC.Wing.eta = [0;1];           % Spanwise location of the airfoil sections
+AC.Wing.eta = [0; 0.5 ; 1];           % Spanwise location of the airfoil sections
 AC.Aero.MaxIterIndex = 150;    %Maximum number of Iteration for the
                                %convergence of viscous calculatio TODO
                                %inviscid so is this required?
