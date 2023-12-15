@@ -1,4 +1,4 @@
-addpath(genpath('Constraints')); addpath(genpath('Disciplines'));
+addpath(genpath('Constraints')); addpath(genpath('Disciplines')); addpath(genpath('matlab-jsystem-master'));
 
 % Loading constant and ref
 constant = get_constants();
