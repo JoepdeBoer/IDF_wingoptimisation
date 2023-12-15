@@ -19,7 +19,6 @@ x0(5:10) = Au./ref(5:10); % TODO was this supposed not to be normalised thus wit
 x0(11:16) = Al./ref(11:16);
 x0(17:end) = 1;
 
-
 % Bounds
 lb(1) = 24/ref(1);
 lb(2) = 0.75;
