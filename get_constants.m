@@ -1,6 +1,6 @@
 function constant = get_constants()
 constant.s0 = 5.75;             % Kink semi-span [m]
-constant.W_aw = 4.5735e4;       % Weight aircraft-wing [kg]
+constant.W_aw = 45802.05;       % Weight aircraft-wing [kg]
 constant.W_TO_max_ref = 73500;  % Maximum take-off weight reference [kg]
 constant.W_fuel_ref = 17940;    % Fuel weight reference [kg]
 constant.M_mo = 0.82;           % Maximum operating mach number [-]

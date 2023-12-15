@@ -69,7 +69,7 @@ AC.Wing.Airfoils    = [kt,kb;
                        kt,kb;
                        kt,kb];
 AC.Wing.inc  = 0;              % Wing incidence angle (degree)
-AC.Wing.eta = [0; 0.5 ; 1];           % Spanwise location of the airfoil sections
+AC.Wing.eta = [0; s0/b/2 ; 1];    % Spanwise location of the airfoil sections  TOD0 S0 as fraction of the span 
 AC.Aero.MaxIterIndex = 150;    %Maximum number of Iteration for the
                                %convergence of viscous calculatio TODO
                                %inviscid so is this required?
