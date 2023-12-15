@@ -8,4 +8,5 @@ function [LD, C_D_aw] = Aerodynamics(X)
     LD_wing = Res.CLwing/Res.CDwing;
     C_D_aw = Res.CLwing*1/X(19)-Res.CDwing;
     LD = Res.CLwing/(Res.CDwing+C_D_aw);
+    % hello
 end

@@ -1,4 +1,4 @@
-addpath(genpath('Constraints')); addpath(genpath('Disciplines')); addpath(genpath('matlab-jsystem-master'));
+addpath(genpath('Constraints')); addpath(genpath('Disciplines')); addpath(genpath('Storage')); addpath(genpath('matlab-jsystem-master'));
 
 % Loading constant and ref
 constant = get_constants();
@@ -15,9 +15,9 @@ airfoil = 'withcomb135';        % Specify name of initial airfoil coordinate .da
 
 % Create design vector (normalised)
 x0(1:4) = 1;
-x0(5:10) = Au./ref(5:10); % TODO was this supposed not to be normalised thus without dividing by the reference making it 1
-x0(11:16) = Al./ref(11:16);
-x0(17:end) = 1;
+x0(5:10) = Au; % non normalised airfoil 
+x0(11:16) = Al;
+x0(17:21) = 1;
 
 % Bounds
 lb(1) = 24/ref(1);
@@ -50,7 +50,8 @@ global couplings
 
 [L, M_c4, AC] = Loads(x0.*ref);
 couplings.W_wing = Structures();
-constant.W_aw = constant.W_TO_max_ref - W_wing - W_fuel;
+constant.W_aw = constant.W_TO_max_ref - couplings.W_wing - ref(20);
+disp(['Waw:', num2str(constant.W_aw)]);
 couplings.W_fuel = Performance(x0.*ref, constant, ref);
 [c, cc] = Constraints(x0.*ref);
 V_tank = TankVolume(x0.*ref, constant);
