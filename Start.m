@@ -28,15 +28,21 @@ lb(5:10) = x0(5:10)-0.2;
 lb(11:16) = x0(11:16)-0.2;
 lb(17) = 0.9;
 lb(18) = 0.9;
+lb(19) = 0.5;
+lb(20) = 0.5;
+lb(21) = 0.5;
 
 ub(1) = 52/ref(1);
 ub(2) = 1.25;
 ub(3) = 1/ref(3);
-ub(4) = 31.9/ref(4);
+ub(4) = 48.5/ref(4);
 ub(5:10) = x0(5:10)+0.2;
 ub(11:16) = x0(11:16)+0.2;
 ub(17) = 1.1;
 ub(18) = 1.1;
+ub(19) = 2;
+ub(20) = 2;
+ub(21) = 2;
 
 %% Constants
 constant = get_constants();
@@ -46,7 +52,7 @@ OEW = 3.1485e+04+x0(21)*ref(21);     % Operational empty weight [kg]
 
 %% Initial run
 global couplings
-[couplings.LD, C_D_aw] = Aerodynamics(x0.*ref);
+[couplings.LD, CD_aw, Res] = Aerodynamics(x0.*ref); 
 
 [L, M_c4, AC] = Loads(x0.*ref);
 couplings.W_wing = Structures();
@@ -68,14 +74,16 @@ pbaspect([1 1 1])
 
 %% Optimisation
 % Options for optimization
-options.Display         = 'iter-detailed';
-options.Algorithm       = 'sqp';
-options.FunValCheck     = 'off';
-options.DiffMinChange   = 1e-6;         % Minimum change while gradient searching
-options.DiffMaxChange   = 5e-2;         % Maximum change while gradient searching
-options.TolCon          = 1e-6;         % Maximum difference between two subsequent constraint vectors [c and ceq]
-options.TolFun          = 1e-6;         % Maximum difference between two subsequent objective value
-options.TolX            = 1e-6;         % Maximum difference between two subsequent design vectors
-options.MaxIter         = 30;           % Maximum iterations
+% options.Display         = 'iter-detailed';
+% options.Algorithm       = 'sqp';
+% options.FunValCheck     = 'off';
+% options.DiffMinChange   = 1e-6;         % Minimum change while gradient searching
+% options.DiffMaxChange   = 5e-2;         % Maximum change while gradient searching
+% options.TolCon          = 1e-6;         % Maximum difference between two subsequent constraint vectors [c and ceq]
+% options.TolFun          = 1e-6;         % Maximum difference between two subsequent objective value
+% options.TolX            = 1e-6;         % Maximum difference between two subsequent design vectors
+% options.MaxIter         = 30;           % Maximum iterations
+% 
+% [x, FVAL, EXITFLAG, OUTPUT] = fmincon(@(x) IDF_optimiser(x), x0, [], [], [], [], lb, ub, @(x) Constraints(x), options);
 
-[x, FVAL, EXITFLAG, OUTPUT] = fmincon(@(x) IDF_optimiser(x), x0, [], [], [], [], lb, ub, @(x) Constraints(x), options);
+[xsol, fval, history, searchdir] = runfmincon(x0, lb, ub);

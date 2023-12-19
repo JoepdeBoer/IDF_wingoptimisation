@@ -1,11 +1,11 @@
 function ref = get_ref()
     b = 34.09;              % Wing span [m]
-    c_r = 6.1;              % Root chord [m]
-    lambda = 0.269;         % Taper ratio [-]
+    c_r = 7;                % Root chord [m]
+    lambda = 0.234;         % Taper ratio [-]
     Lambda_LE = 24.506;     % Leading edge sweep [m]
     M_cr = 0.78;            % Cruise mach number [-]
     h_cr = 11278;           % Cruise altitude [m]
-    LD = 18.76;             % Target variable lift/drag ratio [-]
+    LD = 16;                % Target variable lift/drag ratio [-]
     W_fuel = 17940;         % Target variable W_fuel [kg]
     W_wing = 9825;          % Target variable W_wing [kg]
     

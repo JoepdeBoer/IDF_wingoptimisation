@@ -6,8 +6,7 @@ function [CO2] = IDF_optimiser(X)
 
     % Denormalising 
     Design = X.*ref; % element whise multiplication
-    disp(Design);
-
+    disp(X);
 
     % Discilplines
     global couplings;

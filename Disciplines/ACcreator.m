@@ -42,7 +42,7 @@ end
 %calculating required planform parameters
 x2 = s0 * tand(sweep); % x loc of kink LE
 z2 = s0 * tand(dihedral); % z loc of kink LE 
-c2 = c1 - x2 + s0*tand(sweep_TE); % chord lenght at kink
+c2 = c1 - x2 + s0*tand(constant.sweepTE); % chord lenght at kink
 x3 = b/2 * tand(sweep); % x loc of tip LE
 z3 = b/2 * tand(dihedral); % z loc of tip LE
 c3 = c1 * taper; % chord lenght of tip
@@ -69,7 +69,7 @@ AC.Wing.Airfoils    = [kt,kb;
                        kt,kb;
                        kt,kb];
 AC.Wing.inc  = 0;              % Wing incidence angle (degree)
-AC.Wing.eta = [0; 0.5 ; 1];           % Spanwise location of the airfoil sections
+AC.Wing.eta = [0; s0/b/2 ; 1];    % Spanwise location of the airfoil sections  TOD0 S0 as fraction of the span 
 AC.Aero.MaxIterIndex = 150;    %Maximum number of Iteration for the
                                %convergence of viscous calculatio TODO
                                %inviscid so is this required?
@@ -81,8 +81,9 @@ AC.Aero.alt  = altitude;
 % [~,a, ~, rho, nu] = atmosisa(AC.Aero.alt); % standard atmosphere calcs
 
 % Use for old MATLAB version
-[~,a, ~, rho] = atmosisa(AC.Aero.alt);      % standard atmosphere calcs
-nu = 1.45e-5;                               % Kinematic viscosity [N s/m^2]
+[T, a, ~, rho] = atmosisa(AC.Aero.alt);      % standard atmosphere calcs
+mu = 1.457 * 10^-6 * T^(3/2) / (T + 110.4); % Dynamic viscousity (Emperical)
+nu = mu/rho;                                % Kinematic viscousity
 
 AC.Aero.V     = AC.Aero.M * a;              % flight speed (m/s)
 AC.Aero.rho   = rho;                        % air density  (kg/m3)
