@@ -59,14 +59,14 @@ couplings.W_wing = Structures();
 constant.W_aw = constant.W_TO_max_ref - couplings.W_wing - ref(20);
 disp(['Waw:', num2str(constant.W_aw)]);
 couplings.W_fuel = Performance(x0.*ref, constant, ref);
-[c, cc] = Constraints(x0.*ref);
+% [c, cc] = Constraints(x0.*ref);
 V_tank = TankVolume(x0.*ref, constant);
 
-%% Wing planform plot
+%% Reference planform plot
 figure
 plot([AC.Wing.Geom(1,1), AC.Wing.Geom(2,1), AC.Wing.Geom(3,1), AC.Wing.Geom(3,1)+AC.Wing.Geom(3,4)], [AC.Wing.Geom(1,2), AC.Wing.Geom(2,2), AC.Wing.Geom(3,2), AC.Wing.Geom(3,2)], 'k', 'linewidth', 1); hold on
 plot([AC.Wing.Geom(1,1)+AC.Wing.Geom(1,4), AC.Wing.Geom(2,1)+AC.Wing.Geom(2,4), AC.Wing.Geom(3,1)+AC.Wing.Geom(3,4)], [AC.Wing.Geom(1,2), AC.Wing.Geom(2,2), AC.Wing.Geom(3,2)], 'k', 'linewidth', 1); hold on
-title('Wing planform')
+title('Reference wing planform')
 xlabel('x [m]')
 ylabel('y [m]')
 axis([-5, 15, 0, 20])
@@ -86,4 +86,17 @@ pbaspect([1 1 1])
 % 
 % [x, FVAL, EXITFLAG, OUTPUT] = fmincon(@(x) IDF_optimiser(x), x0, [], [], [], [], lb, ub, @(x) Constraints(x), options);
 
+tic;
 [xsol, fval, history, searchdir] = runfmincon(x0, lb, ub);
+t=toc;
+%% Optimized planform plot
+AC = ACcreator(xsol.*ref, 1);
+
+figure
+plot([AC.Wing.Geom(1,1), AC.Wing.Geom(2,1), AC.Wing.Geom(3,1), AC.Wing.Geom(3,1)+AC.Wing.Geom(3,4)], [AC.Wing.Geom(1,2), AC.Wing.Geom(2,2), AC.Wing.Geom(3,2), AC.Wing.Geom(3,2)], 'k', 'linewidth', 1); hold on
+plot([AC.Wing.Geom(1,1)+AC.Wing.Geom(1,4), AC.Wing.Geom(2,1)+AC.Wing.Geom(2,4), AC.Wing.Geom(3,1)+AC.Wing.Geom(3,4)], [AC.Wing.Geom(1,2), AC.Wing.Geom(2,2), AC.Wing.Geom(3,2)], 'k', 'linewidth', 1); hold on
+title('Optimized wing planform')
+xlabel('x [m]')
+ylabel('y [m]')
+axis([-5, 15, 0, 20])
+pbaspect([1 1 1])

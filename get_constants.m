@@ -14,16 +14,16 @@ constant.airfoil = 'withcomb135';     % Airfoil name
 constant.payload = 14250;       % Design payload [kg]
 constant.payload_max = 19190;   % Maximum payload [kg]
 constant.R = 5000e3;            % Mission range [m]
-constant.S_ref = 112.9059;      % Reference planform area [m^2]
+constant.S_ref = 133.5597;      % Reference planform area [m^2]
 constant.rho_fuel = 0.81715e3;  % Density fuel [kg/m^3]
 constant.f_tank = 0.93;         % Fuel tank fraction [-]
-constant.V_tank_ref = 9.4280;   % Fuel tank volume reference [m^3]
+constant.V_tank_ref = 29.3288;  % Fuel tank volume reference [m^3]
 constant.sweepTE = 0.1;         % Trailing edge sweep inboard section [deg]
 constant.CD_aw = 0.012776;      % Drag coefficient wing-less aircraft [-]
 
 % TODO NOT ACTUAL NUMBERS
-constant.C_L_cr_ref = 0.1;      % TODO 
-constant.Lambda_25_ref = 15;    % TODO
+constant.C_L_cr_ref = 0.5088;      % TODO 
+constant.Lambda_25_ref = 18.875;    % TODO
 
 
 end

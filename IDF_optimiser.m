@@ -1,4 +1,4 @@
-function [CO2] = IDF_optimiser(X)
+function [CO2_nd] = IDF_optimiser(X)
     %load('ref.mat');
     %load('constant.mat');
     ref = get_ref();
@@ -6,7 +6,6 @@ function [CO2] = IDF_optimiser(X)
 
     % Denormalising 
     Design = X.*ref; % element whise multiplication
-    disp(X);
 
     % Discilplines
     global couplings;
@@ -17,6 +16,7 @@ function [CO2] = IDF_optimiser(X)
 
     % Objective function 
     CO2 = 3.16 * couplings.W_fuel;
+    CO2_nd = couplings.W_fuel/constant.W_fuel_ref;
 
 end
     
