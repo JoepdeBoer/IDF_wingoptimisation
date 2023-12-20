@@ -100,3 +100,6 @@ xlabel('x [m]')
 ylabel('y [m]')
 axis([-5, 15, 0, 20])
 pbaspect([1 1 1])
+
+%% Optimised airfoil plot
+airfoilPlot(xsol, Au, Al);
