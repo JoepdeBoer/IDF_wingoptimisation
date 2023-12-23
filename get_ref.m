@@ -5,7 +5,7 @@ function ref = get_ref()
     Lambda_LE = 24.506;     % Leading edge sweep [m]
     M_cr = 0.78;            % Cruise mach number [-]
     h_cr = 11278;           % Cruise altitude [m]
-    LD = 16;                % Target variable lift/drag ratio [-]
+    LD = 19;                % Target variable lift/drag ratio [-]
     W_fuel = 17940;         % Target variable W_fuel [kg]
     W_wing = 9825;          % Target variable W_wing [kg]
     

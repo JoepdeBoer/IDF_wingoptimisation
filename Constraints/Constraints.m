@@ -11,7 +11,7 @@ ref = get_ref();
 global couplings;
 LD = couplings.LD;
 W_fuel = couplings.W_fuel;
-W_wing = couplings.W_wing;
+W_wing = couplings.W_wing
 
 % Define required design variables s0
 b = x(1)*ref(1);

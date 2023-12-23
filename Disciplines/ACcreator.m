@@ -23,8 +23,6 @@ kt = X(5:10); % top surface coefficients
 kb = X(11:16); % bottom surface coefficients
 altitude = X(18); % flight altitude (m)
 
-sweep_TE = 0.1;     % Inboard trailing edge sweep [deg]
-
 %Depending on dicipline variables
 if aero_loads == 1
     nmax = 2.5;

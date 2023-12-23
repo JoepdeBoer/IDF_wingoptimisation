@@ -20,7 +20,7 @@ sigma_yt = 295e6;       % Aluminum tensile yield stress [N/m^2]
 sigma_yc = 295e6;       % Aluminum compressive yield stress [N/m^2]
 F = 0.96;               % Stiffened panel efficiency factor [-]
 rib_pitch = 0.5;        % Rib pitch [m]
-display_option = 1;     % Display option
+display_option = 0;     % Display option
 
 %% Variables
 span = x(1);

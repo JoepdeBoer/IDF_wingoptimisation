@@ -9,7 +9,7 @@ function [CO2_nd] = IDF_optimiser(X)
 
     % Discilplines
     global couplings;
-    couplings.LD = Aerodynamics(Design);
+    couplings.LD = Aerodynamics(Design)
     couplings.W_fuel = Performance(Design, constant, ref);
     Loads(Design);
     couplings.W_wing = Structures();

@@ -18,7 +18,7 @@ constant.S_ref = 133.5597;      % Reference planform area [m^2]
 constant.rho_fuel = 0.81715e3;  % Density fuel [kg/m^3]
 constant.f_tank = 0.93;         % Fuel tank fraction [-]
 constant.V_tank_ref = 29.3288;  % Fuel tank volume reference [m^3]
-constant.sweepTE = 0.1;         % Trailing edge sweep inboard section [deg]
+constant.sweepTE = 0.5;         % Trailing edge sweep inboard section [deg]
 constant.CD_aw = 0.012776;      % Drag coefficient wing-less aircraft [-]
 
 % TODO NOT ACTUAL NUMBERS
