@@ -3,14 +3,9 @@ addpath(genpath('Constraints')); addpath(genpath('Disciplines')); addpath(genpat
 % Loading constant and ref
 constant = get_constants();
 ref = get_ref();
-%load('ref.mat');
-%load('constant.mat'); 
-
 
 %% Inputs
 airfoil = 'withcomb135';        % Specify name of initial airfoil coordinate .dat file
-
-
 [Au, Al] = AirfoilFit(airfoil);     % Approximate Bernstein coefficients [-]
 
 % Create design vector (normalised)
@@ -44,22 +39,17 @@ ub(19) = 2;
 ub(20) = 2;
 ub(21) = 2;
 
-%% Constants
-constant = get_constants();
-
 %% Other variables
 OEW = 3.1485e+04+x0(21)*ref(21);     % Operational empty weight [kg]
 
 %% Initial run
 global couplings
-[couplings.LD, CD_aw, Res] = Aerodynamics(x0.*ref); 
-
+[couplings.LD, CD_aw, Res] = Aerodynamics(x0.*ref);
+couplings.W_fuel = Performance(x0.*ref, constant, ref)
 [L, M_c4, AC] = Loads(x0.*ref);
-couplings.W_wing = Structures();
-constant.W_aw = constant.W_TO_max_ref - couplings.W_wing - ref(20);
-disp(['Waw:', num2str(constant.W_aw)]);
-couplings.W_fuel = Performance(x0.*ref, constant, ref);
-[c, cc] = Constraints(x0.*ref);
+couplings.W_wing = Structures()
+constant.W_aw = constant.W_TO_max_ref - couplings.W_wing - couplings.W_fuel;
+[c, cc] = Constraints(x0.*ref)
 V_tank = TankVolume(x0.*ref, constant);
 
 %% Wing planform plot
@@ -86,4 +76,4 @@ pbaspect([1 1 1])
 % 
 % [x, FVAL, EXITFLAG, OUTPUT] = fmincon(@(x) IDF_optimiser(x), x0, [], [], [], [], lb, ub, @(x) Constraints(x), options);
 
-[xsol, fval, history, searchdir] = runfmincon(x0, lb, ub);
+% [xsol, fval, history, searchdir] = runfmincon(x0, lb, ub);
