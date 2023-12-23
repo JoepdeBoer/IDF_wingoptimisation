@@ -13,6 +13,9 @@ twist1 = constant.twist_r;
 twist2 = constant.twist_k;
 twist3 = constant.twist_t;
 W_aw = constant.W_aw; % kg to N
+W_fuel = X(20);
+W_wing = X(21);
+W_TO_max = W_aw+W_fuel+W_wing;
 
 %renaming design vector to variables for readabillity
 b = X(1); % wing span
@@ -27,15 +30,14 @@ altitude = X(18); % flight altitude (m)
 if aero_loads == 1
     nmax = 2.5;
     Mach = constant.M_mo;
-    W = constant.W_TO_max_ref * 9.81; % WTO_max in Newton
+    W = W_TO_max * 9.81; % WTO_max in Newton
     AC.Visc = 0; % inviscid anlysis for loads
 else
     nmax = 1;
     Mach = X(17);
-    W = sqrt((constant.W_TO_max_ref * 9.81) * ((constant.W_TO_max_ref-constant.W_fuel_ref) * 9.81));% Design Weight in Newton
+    W = sqrt((W_TO_max * 9.81) * ((W_TO_max - W_fuel) * 9.81));% Design Weight in Newton
     AC.Visc = 1; % viscid analysis for aerodynamics
 end
-
 
 %calculating required planform parameters
 x2 = s0 * tand(sweep); % x loc of kink LE
