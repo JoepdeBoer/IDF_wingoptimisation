@@ -1,4 +1,6 @@
 function [c, cc] = Constraints(x)
+% Input:
+% x: normalised design vector
 
 %load('constant.mat');
 %load('ref.mat');
@@ -12,10 +14,10 @@ W_fuel = couplings.W_fuel;
 W_wing = couplings.W_wing;
 
 % Define required design variables s0
-b = x(1);
-c_r = x(2);
-lambda = x(3);
-Lambda_LE = x(4);
+b = x(1)*ref(1);
+c_r = x(2)*ref(2);
+lambda = x(3)*ref(3);
+Lambda_LE = x(4)*ref(4);
 c_t = c_r*lambda;
 s0 = constant.s0;
 c_k = c_r-s0*tand(Lambda_LE)+s0*tand(constant.sweepTE);
@@ -39,12 +41,12 @@ else
 end
 
 % Fuel tank volume
-V_tank = TankVolume(x, constant);
+V_tank = TankVolume(x.*ref, constant);
 
-cc1 = x(19)/ref(19)-LD/ref(19);
-cc2 = x(20)/ref(20)-W_fuel/ref(20);
-cc3 = x(21)/ref(21)-W_wing/ref(21);
-cc = [cc1, cc2, cc3];    % Consistency constraints
+cc1 = x(19)-LD/ref(19);
+cc2 = x(20)-W_fuel/ref(20);
+cc3 = x(21)-W_wing/ref(21);
+cc = [cc1, cc2, cc3]    % Consistency constraints
 
 c1 = (W_TO_max/S)/(constant.W_TO_max_ref/constant.S_ref)-1;       % c1 <= 0
 c2 = (W_fuel/constant.rho_fuel-V_tank*constant.f_tank)/(constant.W_fuel_ref/constant.rho_fuel-constant.V_tank_ref*constant.f_tank)-1;     % c2 <= 0

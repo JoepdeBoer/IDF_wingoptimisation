@@ -52,11 +52,11 @@ constant.W_aw = constant.W_TO_max_ref - couplings.W_wing - couplings.W_fuel;
 [c, cc] = Constraints(x0.*ref)
 V_tank = TankVolume(x0.*ref, constant);
 
-%% Wing planform plot
+%% Reference planform plot
 figure
 plot([AC.Wing.Geom(1,1), AC.Wing.Geom(2,1), AC.Wing.Geom(3,1), AC.Wing.Geom(3,1)+AC.Wing.Geom(3,4)], [AC.Wing.Geom(1,2), AC.Wing.Geom(2,2), AC.Wing.Geom(3,2), AC.Wing.Geom(3,2)], 'k', 'linewidth', 1); hold on
 plot([AC.Wing.Geom(1,1)+AC.Wing.Geom(1,4), AC.Wing.Geom(2,1)+AC.Wing.Geom(2,4), AC.Wing.Geom(3,1)+AC.Wing.Geom(3,4)], [AC.Wing.Geom(1,2), AC.Wing.Geom(2,2), AC.Wing.Geom(3,2)], 'k', 'linewidth', 1); hold on
-title('Wing planform')
+title('Reference wing planform')
 xlabel('x [m]')
 ylabel('y [m]')
 axis([-5, 15, 0, 20])
