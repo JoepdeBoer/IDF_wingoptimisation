@@ -32,7 +32,7 @@ S = (S1 + S2) * 2;
 Lambda25_in = atand(3/4*s0*tand(Lambda_LE)/s0);
 Lambda25_out = atand((1/4*c_r*(lambda-1)+tand(Lambda_LE)*(b/2-3/4*s0))/(b/2-s0));
 W_TO_max = constant.W_aw+W_fuel+W_wing;
-C_L_cr = AC.Aero.CL
+C_L_cr = AC.Aero.CL;
 
 if Lambda25_in>Lambda25_out
     Lambda_25 = Lambda25_in;
