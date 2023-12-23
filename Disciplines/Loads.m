@@ -34,8 +34,9 @@ end
 % [~,a, ~, rho, nu] = atmosisa(AC.Aero.alt); % standard atmosphere calcs
 
 % Use for old MATLAB version
-nu = 1.45e-5;                               % Kinematic viscosity [N s/m^2]
-
+[T, a, ~, rho] = atmosisa(AC.Aero.alt);         % standard atmosphere calcs
+mu = 1.457 * 10^-6 * T^(3/2) / (T + 110.4);     % Dynamic viscousity (Emperical)
+nu = mu/rho;                                    % Kinematic viscousity
 mac = AC.Aero.Re*nu/AC.Aero.V;
 
 % Calculate lift and moment
