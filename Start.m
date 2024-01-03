@@ -63,9 +63,9 @@ axis([-5, 15, 0, 20])
 pbaspect([1 1 1])
 
 %% Optimisation
-tic;
+start_timer = tic;
 [xsol, fval, history, searchdir] = runfmincon(x0, lb, ub);
-t=toc;
+optimisation_time = toc(start_timer);
 
 %% Optimized planform plot
 AC = ACcreator(xsol.*ref, 1);

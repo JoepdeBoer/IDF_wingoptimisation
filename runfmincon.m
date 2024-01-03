@@ -1,14 +1,19 @@
 function [xsol, fval, history, searchdir] = runfmincon(x0, lb, ub)
- 
+
+% % Parallel computing
+% if max(size(gcp)) == 0 % parallel pool needed
+%     parpool % create the parallel pool
+% end
+
 % Set up shared variables with outfun
 history.x = [];
 history.fval = [];
 searchdir = [];
  
 % Call optimization
-options = optimoptions(@fmincon,'OutputFcn',@outfun,... 
-    'Display','iter','Algorithm','sqp');
+options = optimoptions(@fmincon,'OutputFcn',@outfun);
 % Options for optimization
+options.UseParallel     = false;
 options.OutputFcn       = @outfun;
 options.Display         = 'iter-detailed';
 options.Algorithm       = 'sqp';
@@ -18,7 +23,7 @@ options.TolCon          = 1e-3;         % Maximum difference between two subsequ
 options.TolFun          = 1e-4;         % Maximum difference between two subsequent objective value
 options.TolX            = 1e-4;         % Maximum difference between two subsequent design vectors
 options.MaxIter         = 30;           % Maximum iterations
-
+options
 [xsol,fval] = fmincon(@(x) IDF_optimiser(x), x0, [], [], [], [], lb, ub, @(x) Constraints(x), options);
 
  function stop = outfun(x,optimValues,state)
