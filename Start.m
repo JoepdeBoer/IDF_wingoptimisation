@@ -81,3 +81,94 @@ pbaspect([1 1 1])
 
 %% Optimised airfoil plot
 airfoilPlot(xsol, Au, Al);
+
+
+
+%% Lift and drag distribution plots
+
+% Cruise conditions aerodynamics viscous
+[~, ~, Res_cruise] = Aerodynamics(x0.*ref); % ref
+[~, ~, FinalRes_cruise] = Aerodynamics(xsol.*ref); % solu
+
+% Critical conditions viscous...
+critical_plane = ACcreator(x0.*ref, 1); % sets critical conditions but automatically inviscid
+critical_plane.Visc = 0 ;               % sets it back to viscous
+Res_crit = Q3D_solver(critical_plane);  % ref
+
+critical_plane = ACcreator(xsol.*ref, 1); % sets critical conditions but automatically inviscid
+critical_plane.Visc = 0 ;                 % sets it back to viscous
+FinalRes_crit = Q3D_solver(critical_plane); % solu
+
+% plotting 
+figure % Lift cruise
+hold on; % Hold the current plot
+a1 = plot(Res_cruise.Wing.Yst, Res_cruise.Wing.ccl); label1 = 'initial';
+scatter(Res_cruise.Wing.Yst, Res_cruise.Wing.ccl, 50, 'r');  % Scatter plot with red 
+
+a2 = plot(FinalRes_cruise.Wing.Yst, FinalRes_cruise.Wing.ccl); label2 = 'optimised';
+scatter(FinalRes_cruise.Wing.Yst, FinalRes_cruise.Wing.ccl, 50, 'r');  % Scatter plot with red 
+
+legend([a1,a2],[label1, label2]);
+title('Lift distribution Design Point')
+xlabel('spanwise location [m]');
+ylabel('$C_l \cdot c$ [m]', 'Interpreter', 'Latex');
+ylim([0, Inf]);
+hold off; % Release the current plot
+
+
+figure % Lift at max loading
+hold on; 
+a1 = plot(Res_crit.Wing.Yst, Res_crit.Wing.ccl ); label1 = "initial";
+scatter(Res.Wing.Yst, Res_crit.Wing.ccl, 50, 'red');
+
+a2 = plot(FinalRes_crit.Wing.Yst, FinalRes_crit.Wing.ccl ); label2 = "optimised";
+scatter(FinalRes_crit.Wing.Yst, FinalRes_crit.Wing.ccl, 50, 'red');
+
+legend([a1,a2],[label1, label2]);
+title('Lift distribution Critical Loading Point')
+xlabel('spanwise location [m]');
+ylabel('$C_l \cdot c$ [m]', 'Interpreter', 'Latex');
+ylim([0, Inf]);
+hold off;
+
+Final_chord = FinalRes_cruise.Wing.ccl./FinalRes_cruise.Wing.cl;
+Initial_chord = Res_cruise.Wing.ccl./Res_cruise.Wing.cl;
+
+
+figure % Drag and components at cruise
+hold on;
+
+cdi_init = Res_cruise.Wing.cdi.*Init_chord; 
+cdi_opt  = FinalRes_cruise.Wing.cdi.*Final_chord;
+
+cdp_init = Res_cruise.Section.Cd.*Init_chord;
+cdp_opt = FinalRes.Section.Cd.*Final_chord;
+
+cdtot_init = cdi_init + cdp_init;
+cdtot_opt = cdi_opt + cdp_opt;
+
+
+a1 = plot(Res_cruise.Wing.Yst, cdi_init); label1 = "induced drag initial";
+scatter(Res_cruise.Wing.Yst, cdi_init, 50, 'red');
+
+a2 = plot(Res.Section.Y, cdp_init); label2 = "profile + wave drag initial";
+scatter(Res.Section.Y, cdp_init, 50, 'black');
+
+a3 = plot(Res.Section.Y, cdtot_init); label3 = "total initial";
+scatter(Res.Section.Y, cdtot_init, 50, 'black');
+
+a4 = plot(FinalRes_cruise.Wing.Yst, cdi_opt); label4 = "induced drag optimised";
+scatter(FinalRes_cruise.Wing.Yst, cdi_opt, 50, 'red');
+
+a5 = plot(FinalRes.Section.Y, cdp_opt); label5 = "profile + wave drag optimised";
+scatter(FinalRes.Section.Y, cdp_opt, 50, 'black');
+
+a6 = plot(FinalRes.Section.Y, cdtot_opt); label6 = "total optimised";
+scatter(FinalRes.Section.Y, cdtot_opt, 50, 'black');
+
+legend([a1,a2,a3,a4,a5,a6],[label1, label2, label3, label4, label5, label6]);
+title('Drag Distribution, profile induced and total ')
+xlabel('spanwise location [m]');
+ylabel('$C_d \cdot c$ [m]', 'Interperter', 'Latex');
+ylim([0, Inf]);
+hold off;
