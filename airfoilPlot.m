@@ -8,7 +8,7 @@ filename = 'withcomb135';
 fid = fopen([filename, '.dat']);
 coor = fscanf(fid, '%f\t%f', [2, inf]);
 fclose(fid);
-
+%% Airfoil plot
 % Rearrange array in case structure is different
 if coor(1,1) == 1
     index_0 = find(coor(1,:) == 0);
@@ -48,3 +48,33 @@ axis([0, 1, -0.3, 0.3]);
 title('Airfoil')
 xlabel('x/c [-]')
 ylabel('y/c [-]')
+
+%% Wing surface plot
+ref = get_ref();
+AC = ACcreator(xsol.*ref, 1);
+y = [AC.Wing.Geom(1,2); AC.Wing.Geom(2,2); AC.Wing.Geom(3,2)];
+c = [AC.Wing.Geom(1,4); AC.Wing.Geom(2,4); AC.Wing.Geom(3,4)];
+
+for i=1:length(c)
+    X(:,i) = c(i)*Xtu_opt(:,1)+AC.Wing.Geom(i,1);
+    Y(1:length(X),i) = y(i);
+    Z(:,i) = c(i)*Xtu_opt(:,2)+AC.Wing.Geom(i,3);
+end
+for i=1:length(c)
+    X_lower(:,i) = c(i)*[0; Xtl_low_opt(:,1)]+AC.Wing.Geom(i,1);
+    Y_lower(1:length(X_low)+1,i) = y(i);
+    Z_lower(:,i) = c(i)*[0; Xtl_low_opt(:,2)]+AC.Wing.Geom(i,3);
+end
+
+% Plot the wing surface
+figure;
+patch(surf2patch(X,Y,Z,Z), 'FaceColor', 'red', 'LineStyle', 'none');hold;
+patch(surf2patch(X_lower,Y_lower,Z_lower,Z_lower), 'FaceColor', 'red', 'LineStyle', 'none');hold
+shading faceted; 
+view(3)
+xlabel('X [m]');
+ylabel('Y [m]');
+zlabel('Z [m]');
+title('Optimised wing');
+axis equal;
+grid on;

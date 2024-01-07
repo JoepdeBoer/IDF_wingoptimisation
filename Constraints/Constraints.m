@@ -49,6 +49,6 @@ cc3 = x(21)-W_wing/ref(21);
 cc = [cc1, cc2, cc3]    % Consistency constraints
 
 c1 = (W_TO_max/S)/(constant.W_TO_max_ref/constant.S_ref)-1;       % c1 <= 0
-c2 = (W_fuel/constant.rho_fuel-V_tank*constant.f_tank)/(constant.W_fuel_ref/constant.rho_fuel-constant.V_tank_ref*constant.f_tank)-1;     % c2 <= 0
-c3 = (C_L_cr-(0.86*cosd(Lambda_25))/1.3)/(constant.C_L_cr_ref-(0.86*cosd(constant.Lambda_25_ref))/1.3)-1;     % c3 <= 0
+c2 = (W_fuel/constant.rho_fuel-V_tank*constant.f_tank)/abs(ref(20)/constant.rho_fuel-constant.V_tank_ref*constant.f_tank);     % c2 <= 0
+c3 = (C_L_cr-(0.86*cosd(Lambda_25))/1.3)/abs(constant.C_L_cr_ref-(0.86*cosd(constant.Lambda_25_ref))/1.3);     % c3 <= 0
 c = [c1, c2, c3]   % Inequality constraints

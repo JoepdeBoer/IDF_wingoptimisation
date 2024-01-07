@@ -1,4 +1,4 @@
-function [xsol, fval, history, searchdir] = runfmincon(x0, lb, ub)
+function [xsol, fval, exitflag, output, lambda, history, searchdir] = runfmincon(x0, lb, ub)
 
 % Set up shared variables with outfun
 history.x = [];
@@ -13,14 +13,14 @@ options = optimoptions(@fmincon,'OutputFcn',@outfun);
 options.OutputFcn       = @outfun;
 options.Display         = 'iter-detailed';
 options.Algorithm       = 'sqp';
-options.DiffMinChange   = 5e-4;         % Minimum change while gradient searching
+options.DiffMinChange   = 1e-3;         % Minimum change while gradient searching
 options.DiffMaxChange   = 5e-2;         % Maximum change while gradient searching
 options.TolCon          = 1e-3;         % Maximum difference between two subsequent constraint vectors [c and ceq]
-options.TolFun          = 1e-4;         % Maximum difference between two subsequent objective value
+options.TolFun          = 1e-5;         % Maximum difference between two subsequent objective value
 options.TolX            = 1e-4;         % Maximum difference between two subsequent design vectors
 options.MaxIter         = 30;           % Maximum iterations
 
-[xsol,fval] = fmincon(@(x) IDF_optimiser(x), x0, [], [], [], [], lb, ub, @(x) Constraints(x), options);
+[xsol,fval,exitflag,output,lambda] = fmincon(@(x) IDF_optimiser(x), x0, [], [], [], [], lb, ub, @(x) Constraints(x), options);
 
  function stop = outfun(x,optimValues,state)
      stop = false;

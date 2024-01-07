@@ -50,7 +50,7 @@ couplings.W_fuel = Performance(x0.*ref, constant, ref);
 couplings.W_wing = Structures();
 constant.W_aw = constant.W_TO_max_ref - couplings.W_wing - couplings.W_fuel;
 % [c, cc] = Constraints(x0.*ref)
-% V_tank = TankVolume(x0.*ref, constant);
+V_tank = TankVolume(x0.*ref, constant);
 
 %% Reference planform plot
 figure
@@ -64,7 +64,7 @@ pbaspect([1 1 1])
 
 %% Optimisation
 start_timer = tic;
-[xsol, fval, history, searchdir] = runfmincon(x0, lb, ub);
+[xsol, fval, exitflag, output, lambda, history, searchdir] = runfmincon(x0, lb, ub);
 optimisation_time = toc(start_timer);
 
 %% Optimized planform plot
@@ -79,10 +79,8 @@ ylabel('y [m]')
 axis([-5, 15, 0, 20])
 pbaspect([1 1 1])
 
-%% Optimised airfoil plot
-airfoilPlot(xsol, Au, Al);
-
-
+%% Optimised airfoil and wing plot
+airfoilPlot(x0, Au, Al);
 
 %% Lift and drag distribution plots
 
