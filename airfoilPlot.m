@@ -65,16 +65,21 @@ for i=1:length(c)
     Y_lower(1:length(X_low)+1,i) = y(i);
     Z_lower(:,i) = c(i)*[0; Xtl_low_opt(:,2)]+AC.Wing.Geom(i,3);
 end
+Y_symmetry = -Y;
+
 
 % Plot the wing surface
 figure;
-patch(surf2patch(X,Y,Z,Z), 'FaceColor', 'red', 'LineStyle', 'none');hold;
-patch(surf2patch(X_lower,Y_lower,Z_lower,Z_lower), 'FaceColor', 'red', 'LineStyle', 'none');hold
+patch(surf2patch(X,Y,Z,Z), 'FaceColor', 'interp', 'EdgeColor', 'interp');hold on
+patch(surf2patch(X_lower,Y_lower,Z_lower,Z_lower), 'FaceColor', 'interp', 'EdgeColor', 'interp');hold on
+patch(surf2patch(X,Y_symmetry,Z,Z), 'FaceColor', 'interp', 'EdgeColor', 'interp');hold on
+patch(surf2patch(X_lower,Y_symmetry,Z_lower,Z_lower), 'FaceColor', 'interp', 'EdgeColor', 'interp');hold on
 shading faceted; 
 view(3)
-xlabel('X [m]');
-ylabel('Y [m]');
-zlabel('Z [m]');
-title('Optimised wing');
+xlabel('X [m]', 'fontsize', 20);
+ylabel('Y [m]', 'fontsize', 20);
+zlabel('Z [m]', 'fontsize', 20);
+title('Optimised wing', 'fontsize', 30);
 axis equal;
 grid on;
+set(gca,'FontSize',20); 

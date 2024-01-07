@@ -85,8 +85,8 @@ airfoilPlot(x0, Au, Al);
 %% Lift and drag distribution plots
 
 % Cruise conditions aerodynamics viscous
-[~, ~, Res_cruise] = Aerodynamics(x0.*ref); % ref
-[~, ~, FinalRes_cruise] = Aerodynamics(xsol.*ref); % solu
+[~, Res_cruise] = Aerodynamics(x0.*ref); % ref
+[~, FinalRes_cruise] = Aerodynamics(xsol.*ref); % solu
 
 % Critical conditions viscous...
 critical_plane = ACcreator(x0.*ref, 1); % sets critical conditions but automatically inviscid
@@ -136,10 +136,10 @@ Initial_chord = Res_cruise.Wing.ccl./Res_cruise.Wing.cl;
 figure % Drag and components at cruise
 hold on;
 
-cdi_init = Res_cruise.Wing.cdi.*Init_chord; 
+cdi_init = Res_cruise.Wing.cdi.*Initial_chord; 
 cdi_opt  = FinalRes_cruise.Wing.cdi.*Final_chord;
 
-cdp_init = Res_cruise.Section.Cd.*Init_chord;
+cdp_init = Res_cruise.Section.Cd.*Initial_chord;
 cdp_opt = FinalRes.Section.Cd.*Final_chord;
 
 cdtot_init = cdi_init + cdp_init;
@@ -170,3 +170,6 @@ xlabel('spanwise location [m]');
 ylabel('$C_d \cdot c$ [m]', 'Interperter', 'Latex');
 ylim([0, Inf]);
 hold off;
+
+%% Constraints evoluation
+plotHistory(history);
