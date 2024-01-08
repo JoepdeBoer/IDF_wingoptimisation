@@ -1,4 +1,4 @@
-addpath(genpath('Constraints')); addpath(genpath('Disciplines')); addpath(genpath('Storage')); addpath(genpath('matlab-jsystem-master'));
+addpath(genpath('Constraints')); addpath(genpath('Disciplines')); addpath(genpath('Storage')); addpath(genpath('matlab-jsystem-master')); addpath(genpath('postprocessing'));
 
 % Loading constant and ref
 constant = get_constants();
@@ -96,7 +96,7 @@ critical_plane = ACcreator(xsol.*ref, 1); % sets critical conditions but automat
 critical_plane.Visc = 0 ;                 % sets it back to viscous
 FinalRes_crit = Q3D_solver(critical_plane); % solu
 
-% plotting 
+%% plotting Lift curves
 figure % Lift cruise
 hold on; % Hold the current plot
 a1 = plot(Res_cruise.Wing.Yst, Res_cruise.Wing.ccl); label1 = 'initial';
@@ -116,7 +116,7 @@ hold off; % Release the current plot
 figure % Lift at max loading
 hold on; 
 a1 = plot(Res_crit.Wing.Yst, Res_crit.Wing.ccl ); label1 = "initial";
-scatter(Res.Wing.Yst, Res_crit.Wing.ccl, 50, 'red');
+scatter(Res_crit.Wing.Yst, Res_crit.Wing.ccl, 50, 'red');
 
 a2 = plot(FinalRes_crit.Wing.Yst, FinalRes_crit.Wing.ccl ); label2 = "optimised";
 scatter(FinalRes_crit.Wing.Yst, FinalRes_crit.Wing.ccl, 50, 'red');
@@ -128,46 +128,49 @@ ylabel('$C_l \cdot c$ [m]', 'Interpreter', 'Latex');
 ylim([0, Inf]);
 hold off;
 
-Final_chord = FinalRes_cruise.Wing.ccl./FinalRes_cruise.Wing.cl;
-Initial_chord = Res_cruise.Wing.ccl./Res_cruise.Wing.cl;
 
+%% prep drag curves
+Final_chord = FinalRes_cruise.Wing.chord;
+Initial_chord = Res_cruise.Wing.chord;
 
-figure % Drag and components at cruise
-hold on;
+Finalsectionchord = chord(xsol.*ref, FinalRes_cruise.Section.Y);
+Initialsectionchord = chord(x0.*ref, Res_cruise.Section.Y);
 
+%induced drag
 cdi_init = Res_cruise.Wing.cdi.*Initial_chord; 
 cdi_opt  = FinalRes_cruise.Wing.cdi.*Final_chord;
 
-cdp_init = Res_cruise.Section.Cd.*Initial_chord;
-cdp_opt = FinalRes.Section.Cd.*Final_chord;
+%interpolated values as the sections dont match up
+cdi_init_inter = interp1(Res_cruise.Wing.Yst,Res_cruise.Wing.cdi, Res_cruise.Section.Y, "linear", "extrap").* Initialsectionchord
+cdi_opt_inter = interp1(FinalRes_cruise.Wing.Yst,FinalRes_cruise.Wing.cdi, FinalRes_cruise.Section.Y, 'linear','extrap').* Finalsectionchord
 
-cdtot_init = cdi_init + cdp_init;
-cdtot_opt = cdi_opt + cdp_opt;
+%profile/wave
+cdp_init = Res_cruise.Section.Cd'.*Initialsectionchord;
+cdp_opt = FinalRes_cruise.Section.Cd'.*Finalsectionchord;
+
+%Total 
+cdtot_init = cdi_init_inter + cdp_init;
+cdtot_opt = cdi_opt_inter + cdp_opt;
 
 
-a1 = plot(Res_cruise.Wing.Yst, cdi_init); label1 = "induced drag initial";
-scatter(Res_cruise.Wing.Yst, cdi_init, 50, 'red');
 
-a2 = plot(Res.Section.Y, cdp_init); label2 = "profile + wave drag initial";
-scatter(Res.Section.Y, cdp_init, 50, 'black');
+%%
+figure % Drag and components at cruise
+hold on;
 
-a3 = plot(Res.Section.Y, cdtot_init); label3 = "total initial";
-scatter(Res.Section.Y, cdtot_init, 50, 'black');
+a1 = plot(Res_cruise.Wing.Yst, cdi_init, '--o', 'Color', 'red', MarkerSize=20); label1 = "induced drag initial";
+a2 = plot(Res_cruise.Section.Y, cdp_init, ':x','Color', 'red',MarkerSize=20); label2 = "profile + wave drag initial";
+a3 = plot(Res_cruise.Section.Y, cdtot_init, ':*', 'Color', 'red',MarkerSize=20); label3 = "total initial";
+a4 = plot(FinalRes_cruise.Wing.Yst, cdi_opt, '--square', 'Color', 'black',MarkerSize=20); label4 = "induced drag optimised";
+a5 = plot(FinalRes_cruise.Section.Y, cdp_opt, ':v', 'Color', 'black',MarkerSize=20); label5 = "profile + wave drag optimised";;
+a6 = plot(FinalRes_cruise.Section.Y, cdtot_opt, 'Color', 'black',MarkerSize=20); label6 = "total optimised";
 
-a4 = plot(FinalRes_cruise.Wing.Yst, cdi_opt); label4 = "induced drag optimised";
-scatter(FinalRes_cruise.Wing.Yst, cdi_opt, 50, 'red');
 
-a5 = plot(FinalRes.Section.Y, cdp_opt); label5 = "profile + wave drag optimised";
-scatter(FinalRes.Section.Y, cdp_opt, 50, 'black');
-
-a6 = plot(FinalRes.Section.Y, cdtot_opt); label6 = "total optimised";
-scatter(FinalRes.Section.Y, cdtot_opt, 50, 'black');
-
-legend([a1,a2,a3,a4,a5,a6],[label1, label2, label3, label4, label5, label6]);
+legend(label1,label2, label3, label4,label5, label6);
 title('Drag Distribution, profile induced and total ')
 xlabel('spanwise location [m]');
-ylabel('$C_d \cdot c$ [m]', 'Interperter', 'Latex');
-ylim([0, Inf]);
+ylabel('$C_d \cdot c$ [m]', 'Interpreter', 'latex');
+ylim([-0.05, 0.35]);
 hold off;
 
 %% Constraints evoluation
