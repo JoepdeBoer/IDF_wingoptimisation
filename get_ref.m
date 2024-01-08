@@ -1,8 +1,11 @@
 function ref = get_ref()
+    Au = [0.233657473793488	0.0799311311431370	0.267480351078855	0.0897753764779299	0.277977484145020	0.381590212828450];
+    Al = [-0.225334607742923	-0.163728263890913	-0.0463343730922910	-0.477955820288272	0.0741479732319931	0.325206660477090];
     b = 34.09;              % Wing span [m]
     c_r = 7;                % Root chord [m]
     lambda = 0.234;         % Taper ratio [-]
     Lambda_LE = 24.506;     % Leading edge sweep [m]
+    
     M_cr = 0.78;            % Cruise mach number [-]
     h_cr = 11278;           % Cruise altitude [m]
     LD = 18.76;             % Target variable lift/drag ratio [-]
@@ -14,8 +17,8 @@ function ref = get_ref()
     ref(2) = c_r;
     ref(3) = lambda;
     ref(4) = Lambda_LE;
-    ref(5:10) = 1;
-    ref(11:16) = 1;
+    ref(5:10) = Au;
+    ref(11:16) = Al;
     ref(17) = M_cr;
     ref(18) = h_cr;
     % Target variables reference

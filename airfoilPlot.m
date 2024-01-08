@@ -9,6 +9,8 @@ fid = fopen([filename, '.dat']);
 coor = fscanf(fid, '%f\t%f', [2, inf]);
 fclose(fid);
 
+ref = get_ref();
+%% Airfoil plot
 % Rearrange array in case structure is different
 if coor(1,1) == 1
     index_0 = find(coor(1,:) == 0);
@@ -31,8 +33,8 @@ X_low = coor(1,pos_index+1:end)';      %points for evaluation along x-axis
 [Xtu_low,Xtl_low,C_low] = D_airfoil2(Au,Al,X_low);
 
 % Optimised
-Au_opt = xsol(5:10);    %upper-surface Bernstein coefficients
-Al_opt = xsol(11:16);   %lower surface Bernstein coefficients
+Au_opt = xsol(5:10).*ref(5:10);    %upper-surface Bernstein coefficients
+Al_opt = xsol(11:16).*ref(11:16);   %lower surface Bernstein coefficients
 
 [Xtu_opt,Xtl_opt,C_opt] = D_airfoil2(Au_opt,Al_opt,X_up);
 [Xtu_low_opt,Xtl_low_opt,C_low_opt] = D_airfoil2(Au_opt,Al_opt,X_low);
@@ -48,3 +50,37 @@ axis([0, 1, -0.3, 0.3]);
 title('Airfoil')
 xlabel('x/c [-]')
 ylabel('y/c [-]')
+
+%% Wing surface plot
+AC = ACcreator(xsol.*ref, 1);
+y = [AC.Wing.Geom(1,2); AC.Wing.Geom(2,2); AC.Wing.Geom(3,2)];
+c = [AC.Wing.Geom(1,4); AC.Wing.Geom(2,4); AC.Wing.Geom(3,4)];
+
+for i=1:length(c)
+    X(:,i) = c(i)*Xtu_opt(:,1)+AC.Wing.Geom(i,1);
+    Y(1:length(X),i) = y(i);
+    Z(:,i) = c(i)*Xtu_opt(:,2)+AC.Wing.Geom(i,3);
+end
+for i=1:length(c)
+    X_lower(:,i) = c(i)*[0; Xtl_low_opt(:,1)]+AC.Wing.Geom(i,1);
+    Y_lower(1:length(X_low)+1,i) = y(i);
+    Z_lower(:,i) = c(i)*[0; Xtl_low_opt(:,2)]+AC.Wing.Geom(i,3);
+end
+Y_symmetry = -Y;
+
+
+% Plot the wing surface
+figure;
+patch(surf2patch(X,Y,Z,Z), 'FaceColor', 'interp', 'EdgeColor', 'interp');hold on
+patch(surf2patch(X_lower,Y_lower,Z_lower,Z_lower), 'FaceColor', 'interp', 'EdgeColor', 'interp');hold on
+patch(surf2patch(X,Y_symmetry,Z,Z), 'FaceColor', 'interp', 'EdgeColor', 'interp');hold on
+patch(surf2patch(X_lower,Y_symmetry,Z_lower,Z_lower), 'FaceColor', 'interp', 'EdgeColor', 'interp');hold on
+shading faceted; 
+view(3)
+xlabel('X [m]', 'fontsize', 20);
+ylabel('Y [m]', 'fontsize', 20);
+zlabel('Z [m]', 'fontsize', 20);
+title('Optimised wing', 'fontsize', 30);
+axis equal;
+grid on;
+set(gca,'FontSize',20); 

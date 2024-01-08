@@ -9,18 +9,16 @@ airfoil = 'withcomb135';        % Specify name of initial airfoil coordinate .da
 [Au, Al] = AirfoilFit(airfoil);     % Approximate Bernstein coefficients [-]
 
 % Create design vector (normalised)
-x0(1:4) = 1;
-x0(5:10) = Au; % non normalised airfoil 
-x0(11:16) = Al;
-x0(17:21) = 1;
+x0(1:21) = 1;
 
 % Bounds
 lb(1) = 24/ref(1);
 lb(2) = 0.75;
 lb(3) = 0.1/ref(3);
 lb(4) = 0.5/ref(4);
-lb(5:10) = x0(5:10)-0.2;
-lb(11:16) = x0(11:16)-0.2;
+lb(5:10) =  1 - 0.2./abs(ref(5:10));
+lb(11:14) = 1 - 0.2./abs(ref(11:14));
+lb(15:16) = 1 - 0.2./abs(ref(15:16));
 lb(17) = 0.9;
 lb(18) = 0.9;
 lb(19) = 0.5;
@@ -31,8 +29,9 @@ ub(1) = 52/ref(1);
 ub(2) = 1.25;
 ub(3) = 1/ref(3);
 ub(4) = 48.5/ref(4);
-ub(5:10) = x0(5:10)+0.2;
-ub(11:16) = x0(11:16)+0.2;
+ub(5:10) =  1 + 0.2./abs(ref(5:10));
+ub(11:14) = 1 + 0.2./abs(ref(11:14));
+ub(15:16) = 1 + 0.2./abs(ref(15:16));
 ub(17) = 1.1;
 ub(18) = 1.1;
 ub(19) = 2;
@@ -50,7 +49,7 @@ couplings.W_fuel = Performance(x0.*ref, constant, ref);
 couplings.W_wing = Structures();
 constant.W_aw = constant.W_TO_max_ref - couplings.W_wing - couplings.W_fuel;
 % [c, cc] = Constraints(x0.*ref)
-% V_tank = TankVolume(x0.*ref, constant);
+V_tank = TankVolume(x0.*ref, constant);
 
 %% Reference planform plot
 figure
@@ -64,7 +63,7 @@ pbaspect([1 1 1])
 
 %% Optimisation
 start_timer = tic;
-[xsol, fval, history, searchdir] = runfmincon(x0, lb, ub);
+[xsol, fval, exitflag, output, lambda, history, searchdir] = runfmincon(x0, lb, ub);
 optimisation_time = toc(start_timer);
 
 %% Optimized planform plot
@@ -79,10 +78,8 @@ ylabel('y [m]')
 axis([-5, 15, 0, 20])
 pbaspect([1 1 1])
 
-%% Optimised airfoil plot
-airfoilPlot(xsol, Au, Al);
-
-
+%% Optimised airfoil and wing plot
+airfoilPlot(x0, Au, Al);
 
 %% Lift and drag distribution plots
 
@@ -138,10 +135,10 @@ Initial_chord = Res_cruise.Wing.ccl./Res_cruise.Wing.cl;
 figure % Drag and components at cruise
 hold on;
 
-cdi_init = Res_cruise.Wing.cdi.*Init_chord; 
+cdi_init = Res_cruise.Wing.cdi.*Initial_chord; 
 cdi_opt  = FinalRes_cruise.Wing.cdi.*Final_chord;
 
-cdp_init = Res_cruise.Section.Cd.*Init_chord;
+cdp_init = Res_cruise.Section.Cd.*Initial_chord;
 cdp_opt = FinalRes.Section.Cd.*Final_chord;
 
 cdtot_init = cdi_init + cdp_init;
@@ -172,3 +169,6 @@ xlabel('spanwise location [m]');
 ylabel('$C_d \cdot c$ [m]', 'Interperter', 'Latex');
 ylim([0, Inf]);
 hold off;
+
+%% Constraints evoluation
+plotHistory(history);
