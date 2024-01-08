@@ -9,18 +9,16 @@ airfoil = 'withcomb135';        % Specify name of initial airfoil coordinate .da
 [Au, Al] = AirfoilFit(airfoil);     % Approximate Bernstein coefficients [-]
 
 % Create design vector (normalised)
-x0(1:4) = 1;
-x0(5:10) = Au; % non normalised airfoil 
-x0(11:16) = Al;
-x0(17:21) = 1;
+x0(1:21) = 1;
 
 % Bounds
 lb(1) = 24/ref(1);
 lb(2) = 0.75;
 lb(3) = 0.1/ref(3);
 lb(4) = 0.5/ref(4);
-lb(5:10) = x0(5:10)-0.2;
-lb(11:16) = x0(11:16)-0.2;
+lb(5:10) =  1 - 0.2./abs(ref(5:10));
+lb(11:14) = 1 - 0.2./abs(ref(11:14));
+lb(15:16) = 1 - 0.2./abs(ref(15:16));
 lb(17) = 0.9;
 lb(18) = 0.9;
 lb(19) = 0.5;
@@ -31,8 +29,9 @@ ub(1) = 52/ref(1);
 ub(2) = 1.25;
 ub(3) = 1/ref(3);
 ub(4) = 48.5/ref(4);
-ub(5:10) = x0(5:10)+0.2;
-ub(11:16) = x0(11:16)+0.2;
+ub(5:10) =  1 + 0.2./abs(ref(5:10));
+ub(11:14) = 1 + 0.2./abs(ref(11:14));
+ub(15:16) = 1 + 0.2./abs(ref(15:16));
 ub(17) = 1.1;
 ub(18) = 1.1;
 ub(19) = 2;

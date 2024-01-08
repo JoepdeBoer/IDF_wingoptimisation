@@ -40,13 +40,13 @@ options.MaxIter         = 30;           % Maximum iterations
          % searchdir.
            searchdir = [searchdir;... 
                         optimValues.searchdirection'];
-           figure
-           plot(x(1),x(2),'o');
+%            figure
+%            plot(x(1),x(2),'o');
          % Label points with iteration number and add title.
          % Add .15 to x(1) to separate label from plotted 'o'.
-           text(x(1)+.15,x(2),... 
-                num2str(optimValues.iteration));
-           title('Sequence of Points Computed by fmincon');
+%            text(x(1)+.15,x(2),... 
+%                 num2str(optimValues.iteration));
+%            title('Sequence of Points Computed by fmincon');
          case 'done'
              hold off
          otherwise
