@@ -87,8 +87,8 @@ airfoilPlot(xsol, Au, Al);
 %% Lift and drag distribution plots
 
 % Cruise conditions aerodynamics viscous
-[~, ~, Res_cruise] = Aerodynamics(x0.*ref); % ref
-[~, ~, FinalRes_cruise] = Aerodynamics(xsol.*ref); % solu
+[~, Res_cruise] = Aerodynamics(x0.*ref); % ref
+[~, FinalRes_cruise] = Aerodynamics(xsol.*ref); % solu
 
 % Critical conditions viscous...
 critical_plane = ACcreator(x0.*ref, 1); % sets critical conditions but automatically inviscid
