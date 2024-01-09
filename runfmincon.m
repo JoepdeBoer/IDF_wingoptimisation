@@ -19,7 +19,7 @@ options.TolCon          = 1e-3;         % Maximum difference between two subsequ
 options.TolFun          = 1e-5;         % Maximum difference between two subsequent objective value
 options.TolX            = 1e-4;         % Maximum difference between two subsequent design vectors
 options.MaxIter         = 30;           % Maximum iterations
-
+% options.UseParallel     = true;         % Tries to calculate gradient in parralel
 [xsol,fval,exitflag,output,lambda] = fmincon(@(x) IDF_optimiser(x), x0, [], [], [], [], lb, ub, @(x) Constraints(x), options);
 
  function stop = outfun(x,optimValues,state)
