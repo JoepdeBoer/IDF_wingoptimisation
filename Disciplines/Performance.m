@@ -13,7 +13,8 @@ V = M*a;
 V_cr_ref = M_cr_ref*a_ref;
 
 eta = exp(-((V-V_cr_ref)^2/(2*70^2))-((h-h_cr_ref)^2/(2*2500^2)));
-C_T_specific = 1.8639e-4;           % Specific fuel consumption [1/s]
+% C_T_specific = 1.8639e-4;           % Specific fuel consumption [1/s]
+C_T_specific = 0.000165495;           % Janes all the worlds engines [1/s]
 C_T = C_T_specific/eta;
 W_fuel = (exp(constant.R*x(19)^(-1)*C_T/V)/0.938-1)*(constant.W_aw+x(21));
 

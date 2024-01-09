@@ -4,9 +4,9 @@ addpath(genpath('Constraints')); addpath(genpath('Disciplines')); addpath(genpat
 constant = get_constants();
 ref = get_ref();
 
-%% Inputs
-airfoil = 'withcomb135';        % Specify name of initial airfoil coordinate .dat file
-[Au, Al] = AirfoilFit(airfoil);     % Approximate Bernstein coefficients [-]
+% %% Inputs
+% airfoil = 'withcomb135';        % Specify name of initial airfoil coordinate .dat file
+% [Au, Al] = AirfoilFit(airfoil);     % Approximate Bernstein coefficients [-]
 
 % Create design vector (normalised)
 x0(1:21) = 1;
@@ -42,12 +42,14 @@ ub(21) = 2;
 OEW = 3.1485e+04+x0(21)*ref(21);     % Operational empty weight [kg]
 
 %% Initial run
+constant = get_constants();
+ref = get_ref();
 global couplings
 [couplings.LD, Res] = Aerodynamics(x0.*ref);
 couplings.W_fuel = Performance(x0.*ref, constant, ref);
 [L, M_c4, AC] = Loads(x0.*ref);
 couplings.W_wing = Structures();
-constant.W_aw = constant.W_TO_max_ref - couplings.W_wing - couplings.W_fuel;
+constant.W_aw = constant.W_TO_max_ref - couplings.W_wing - couplings.W_fuel
 % [c, cc] = Constraints(x0.*ref)
 V_tank = TankVolume(x0.*ref, constant);
 

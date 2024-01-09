@@ -4,7 +4,6 @@
 function [LD, Res] = Aerodynamics(X)
     % change Wf, Wwing with constant struct??
     AC = ACcreator(X, 0);
-    AC.Aero
     tic
     Res = Q3D_solver(AC);  
     toc
@@ -18,4 +17,5 @@ function [LD, Res] = Aerodynamics(X)
     
 
     LD = Res.CLwing/(Res.CDwing+CD_aw);
+    CD_aw_next =  Res.CLwing/LD - Res.CDwing
 end

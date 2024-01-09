@@ -8,7 +8,7 @@ function ref = get_ref()
     
     M_cr = 0.78;            % Cruise mach number [-]
     h_cr = 11278;           % Cruise altitude [m]
-    LD = 18.76;             % Target variable lift/drag ratio [-]
+    LD = 16.3;             % Target variable lift/drag ratio [-] https://arc.aiaa.org/doi/pdf/10.2514/6.2005-121
     W_fuel = 17940;         % Target variable W_fuel [kg]
     W_wing = 8428.9;        % Target variable W_wing [kg]
     
