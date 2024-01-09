@@ -4,11 +4,11 @@ addpath(genpath('Constraints')); addpath(genpath('Disciplines')); addpath(genpat
 constant = get_constants();
 ref = get_ref();
 
-% %% Inputs
-% airfoil = 'withcomb135';        % Specify name of initial airfoil coordinate .dat file
-% [Au, Al] = AirfoilFit(airfoil);     % Approximate Bernstein coefficients [-]
+%% Inputs
+airfoil = 'withcomb135';        % Specify name of initial airfoil coordinate .dat file
+[Au, Al] = AirfoilFit(airfoil);     % Approximate Bernstein coefficients [-]
 
-% Create design vector (normalised)
+%% Create design vector (normalised)
 x0(1:21) = 1;
 
 % Bounds
@@ -81,7 +81,7 @@ axis([-5, 15, 0, 20])
 pbaspect([1 1 1])
 
 %% Optimised airfoil and wing plot
-airfoilPlot(x0, Au, Al);
+airfoilPlot(xsol, Au, Al);
 
 %% Lift and drag distribution plots
 
@@ -101,13 +101,13 @@ FinalRes_crit = Q3D_solver(critical_plane); % solu
 %% plotting Lift curves
 figure % Lift cruise
 hold on; % Hold the current plot
-a1 = plot(Res_cruise.Wing.Yst, Res_cruise.Wing.ccl); label1 = 'initial';
-scatter(Res_cruise.Wing.Yst, Res_cruise.Wing.ccl, 50, 'r');  % Scatter plot with red 
+a1 = plot(Res_cruise.Wing.Yst, Res_cruise.Wing.ccl,":o"); label1 = 'initial';
+% scatter(Res_cruise.Wing.Yst, Res_cruise.Wing.ccl, 50, 'r');  % Scatter plot with red 
 
-a2 = plot(FinalRes_cruise.Wing.Yst, FinalRes_cruise.Wing.ccl); label2 = 'optimised';
-scatter(FinalRes_cruise.Wing.Yst, FinalRes_cruise.Wing.ccl, 50, 'r');  % Scatter plot with red 
+a2 = plot(FinalRes_cruise.Wing.Yst, FinalRes_cruise.Wing.ccl, "-o"); label2 = 'optimised';
+% scatter(FinalRes_cruise.Wing.Yst, FinalRes_cruise.Wing.ccl, 50, 'r');  % Scatter plot with red 
 
-legend([a1,a2],[label1, label2]);
+legend(label1, label2);
 title('Lift distribution Design Point')
 xlabel('spanwise location [m]');
 ylabel('$C_l \cdot c$ [m]', 'Interpreter', 'Latex');
@@ -117,13 +117,13 @@ hold off; % Release the current plot
 
 figure % Lift at max loading
 hold on; 
-a1 = plot(Res_crit.Wing.Yst, Res_crit.Wing.ccl ); label1 = "initial";
-scatter(Res_crit.Wing.Yst, Res_crit.Wing.ccl, 50, 'red');
+a1 = plot(Res_crit.Wing.Yst, Res_crit.Wing.ccl,':o' ); label1 = "initial";
+% scatter(Res_crit.Wing.Yst, Res_crit.Wing.ccl, 50, 'red');
 
-a2 = plot(FinalRes_crit.Wing.Yst, FinalRes_crit.Wing.ccl ); label2 = "optimised";
-scatter(FinalRes_crit.Wing.Yst, FinalRes_crit.Wing.ccl, 50, 'red');
+a2 = plot(FinalRes_crit.Wing.Yst, FinalRes_crit.Wing.ccl,'-o' ); label2 = "optimised";
+% scatter(FinalRes_crit.Wing.Yst, FinalRes_crit.Wing.ccl, 50, 'red');
 
-legend([a1,a2],[label1, label2]);
+legend(label1, label2);
 title('Lift distribution Critical Loading Point')
 xlabel('spanwise location [m]');
 ylabel('$C_l \cdot c$ [m]', 'Interpreter', 'Latex');
