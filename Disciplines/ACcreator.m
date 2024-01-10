@@ -87,5 +87,4 @@ AC.Aero.V     = AC.Aero.M * a;              % flight speed (m/s)
 AC.Aero.rho   = rho;                        % air density  (kg/m3)
 AC.Aero.Re    = AC.Aero.V  * mac / nu ;     % reynolds number (based on mac)
 AC.Aero.CL    = nmax *  2 * W / rho / AC.Aero.V^2 / S; % CL
-
 end

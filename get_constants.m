@@ -20,14 +20,12 @@ constant.sweepTE = 0.5;         % Trailing edge sweep inboard section [deg]
 
 constant.V_tank_ref = 29.3288;  % Fuel tank volume reference [m^3]
 constant.sweepTE = 0.5;         % Trailing edge sweep inboard section [deg]
-constant.CD_aw = 0.0080;        % Drag coefficient wing-less aircraft [-]
-constant.W_aw = 46885.29;          % Weight aircraft-wing [kg]
-
-constant.S_ref = 134.244;       % Reference planform area [m^2]
+constant.CD_aw = 0.0121;        % Drag coefficient wing-less aircraft [-]
+constant.W_aw = 46871;          % Weight aircraft-wing [kg]
 
 % Reference values
-constant.C_L_cr_ref = 0.5062;       % Cruise lift coefficient reference [-]
+constant.C_L_cr_ref = 0.50506;      % Cruise lift coefficient reference [-]
 constant.Lambda_25_ref = 21.5633;   % Quarter chord sweep max angle [deg]
-
+constant.S_ref = 134.244;           % Reference planform area [m^2]
 
 end

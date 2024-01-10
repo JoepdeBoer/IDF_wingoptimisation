@@ -38,20 +38,15 @@ ub(19) = 1.2;
 ub(20) = 2;
 ub(21) = 2;
 
-%% Other variables
-OEW = 3.1485e+04+x0(21)*ref(21);     % Operational empty weight [kg]
-
 %% Initial run
-constant = get_constants();
-ref = get_ref();
-global couplings
-[couplings.LD, Res] = Aerodynamics(x0.*ref);
-couplings.W_fuel = Performance(x0.*ref, constant, ref);
+% global couplings
+% [couplings.LD, Res] = Aerodynamics(x0.*ref);
+% couplings.W_fuel = Performance(x0.*ref, constant, ref);
 [L, M_c4, AC] = Loads(x0.*ref);
-couplings.W_wing = Structures();
-constant.W_aw = constant.W_TO_max_ref - couplings.W_wing - couplings.W_fuel
+% couplings.W_wing = Structures();
+% constant.W_aw = constant.W_TO_max_ref - couplings.W_wing - couplings.W_fuel;
 % [c, cc] = Constraints(x0.*ref)
-V_tank = TankVolume(x0.*ref, constant);
+% V_tank = TankVolume(x0.*ref, constant);
 
 %% Reference planform plot
 figure
@@ -143,8 +138,8 @@ cdi_init = Res_cruise.Wing.cdi.*Initial_chord;
 cdi_opt  = FinalRes_cruise.Wing.cdi.*Final_chord;
 
 %interpolated values as the sections dont match up
-cdi_init_inter = interp1(Res_cruise.Wing.Yst,Res_cruise.Wing.cdi, Res_cruise.Section.Y, "linear", "extrap").* Initialsectionchord
-cdi_opt_inter = interp1(FinalRes_cruise.Wing.Yst,FinalRes_cruise.Wing.cdi, FinalRes_cruise.Section.Y, 'linear','extrap').* Finalsectionchord
+cdi_init_inter = interp1(Res_cruise.Wing.Yst,Res_cruise.Wing.cdi, Res_cruise.Section.Y, "linear", "extrap").* Initialsectionchord;
+cdi_opt_inter = interp1(FinalRes_cruise.Wing.Yst,FinalRes_cruise.Wing.cdi, FinalRes_cruise.Section.Y, 'linear','extrap').* Finalsectionchord;
 
 %profile/wave
 cdp_init = Res_cruise.Section.Cd'.*Initialsectionchord;
