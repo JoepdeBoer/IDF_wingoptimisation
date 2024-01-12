@@ -11,6 +11,7 @@ airfoil = 'withcomb135';        % Specify name of initial airfoil coordinate .da
 %% Create design vector (normalised)
 x0(1:21) = 1;
 
+
 % Bounds
 lb(1) = 24/ref(1);
 lb(2) = 0.75;
@@ -60,7 +61,7 @@ pbaspect([1 1 1])
 
 %% Optimisation
 start_timer = tic;
-[xsol, fval, exitflag, output, lambda, history, searchdir] = runfmincon(x0, lb, ub);
+[xsol, fval, exitflag, output, lambda, history, searchdir] = runfmincon(xsol, lb, ub);
 optimisation_time = toc(start_timer);
 
 %% Optimized planform plot
