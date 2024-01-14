@@ -16,7 +16,7 @@ function [CO2_nd] = IDF_optimiser(X)
 
     % Objective function 
     CO2 = 3.16 * couplings.W_fuel;
-    CO2_nd = couplings.W_fuel/constant.W_fuel_ref;
+    CO2_nd = couplings.W_fuel/ref(20);
 
 end
     

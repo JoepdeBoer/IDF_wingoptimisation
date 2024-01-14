@@ -13,12 +13,12 @@ options = optimoptions(@fmincon,'OutputFcn',@outfun);
 options.OutputFcn       = @outfun;
 options.Display         = 'iter-detailed';
 options.Algorithm       = 'sqp';
-options.DiffMinChange   = 1e-4;          % Minimum change while gradient searching 
-options.DiffMaxChange   = 10e-2;         % Maximum change while gradient searching
+% options.DiffMinChange   = 1e-4;          % Minimum change while gradient searching 
+options.DiffMaxChange   = 15e-2;         % Maximum change while gradient searching
 options.TolCon          = 1e-2;          % Maximum Constraint violation
 options.TolFun          = 1e-2;          % Optimallity Tolerance when is solution converged
-options.TolX           = 1e-4;          % Maximum difference between two subsequent design vectors
-options.MaxIter         = 30;            % Maximum iterations
+options.TolX            = 1e-6;          % Maximum difference between two subsequent design vectors
+options.MaxIter         = 5;            % Maximum iterations
 % options.UseParallel     = true;        % Tries to calculate gradient in parralel
 [xsol,fval,exitflag,output,lambda] = fmincon(@(x) IDF_optimiser(x), x0, [], [], [], [], lb, ub, @(x) Constraints(x), options);
 

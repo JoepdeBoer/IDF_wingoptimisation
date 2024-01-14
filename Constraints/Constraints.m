@@ -43,7 +43,7 @@ end
 % Fuel tank volume
 V_tank = TankVolume(x.*ref, constant);
 
-cc1 = x(19)-LD/ref(19);
+cc1 = x(19)-LD/ref(19) * 10; % factor of ten to make LD more strict
 cc2 = x(20)-W_fuel/ref(20);
 cc3 = x(21)-W_wing/ref(21);
 cc = [cc1, cc2, cc3]    % Consistency constraints
